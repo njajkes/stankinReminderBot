@@ -40,7 +40,7 @@ var telegraf_1 = require("telegraf");
 var mongoose = require("mongoose");
 var dotenv = require("dotenv");
 var commands_1 = require("./commands/commands");
-var tasks_1 = require("./controllers/tasks");
+var taskTracker_1 = require("./services/taskTracker");
 var _a = dotenv.config().parsed, TOKEN = _a.TOKEN, MONGO = _a.MONGO;
 function databaseStart() {
     return __awaiter(this, void 0, void 0, function () {
@@ -61,32 +61,19 @@ bot.command('start', commands_1.commands.start);
 bot.command('help', commands_1.commands.help);
 bot.command('groups_list', commands_1.commands.groupsList);
 bot.command('add_task', commands_1.commands.addTask);
+bot.command('add_group', commands_1.commands.addGroup);
 bot.command('ctx', function (ctx) {
-    console.dir(ctx);
+    console.dir(ctx.from);
 });
 bot.on("message", function (ctx) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "Пожалуйста, введите какую-нибудь команду! Я не понимаю по-другому 😖\nСписок всех команд: /help");
 });
 setInterval(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var tasks;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, tasks_1.findPendingTasks)(Date.now())];
+            case 0: return [4 /*yield*/, (0, taskTracker_1.taskTracker)(bot)];
             case 1:
-                tasks = _a.sent();
-                tasks.forEach(function (task) { return __awaiter(void 0, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                bot.telegram.sendMessage(task.uid, "\u041F\u0440\u0435\u0434\u043C\u0435\u0442: ".concat(task.discipline, "\n\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: ").concat(task.description));
-                                task.status = 'pending';
-                                return [4 /*yield*/, task.save()];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
+                _a.sent();
                 return [2 /*return*/];
         }
     });

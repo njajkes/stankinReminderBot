@@ -1,12 +1,12 @@
 import { userModel } from "../models/users"
 
-export async function newUser(uid: number, groupID: number, role: string): Promise<void> {
-  const user = new userModel({
+export async function createUser(uid: number, username: string, groupID: number, role: string): Promise<void> {
+  userModel.create({
     uid: uid,
+    username: username,
     groupID: groupID,
     role: role
   })
-  await user.save((err) => console.error(err))
 }
 
 export async function findUserByUID(uid: number) {

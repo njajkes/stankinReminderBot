@@ -37,26 +37,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.findPendingTasks = exports.createTask = void 0;
-var counters_1 = require("../models/counters");
 var tasks_1 = require("../models/tasks");
 function createTask(uid, disc, time, desc) {
     return __awaiter(this, void 0, void 0, function () {
-        var count, task;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, counters_1.counterModel.findById("taskID")];
-                case 1:
-                    count = (_a.sent()).count;
-                    task = new tasks_1.taskModel({
-                        id: count,
+                case 0: return [4 /*yield*/, tasks_1.taskModel.create({
                         uid: uid,
                         discipline: disc,
                         time: time,
                         description: desc,
                         status: "waiting"
-                    });
-                    return [4 /*yield*/, task.save()];
-                case 2:
+                    })];
+                case 1:
                     _a.sent();
                     return [2 /*return*/];
             }

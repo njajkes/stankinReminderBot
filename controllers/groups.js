@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.getGroupByGID = exports.getAllVisibleGroups = exports.getAllGroups = void 0;
+exports.createGroup = exports.getGroupByGID = exports.getAllVisibleGroups = exports.getAllGroups = void 0;
 var groups_1 = require("../models/groups");
 function getAllGroups() {
     return __awaiter(this, void 0, void 0, function () {
@@ -80,3 +80,21 @@ function getGroupByGID(gid) {
     });
 }
 exports.getGroupByGID = getGroupByGID;
+function createGroup(gName, tracked, from) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, groups_1.groupModel.create({
+                        groupName: gName,
+                        tracked: tracked,
+                        adminID: from.id,
+                        adminUsername: from.username
+                    })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.createGroup = createGroup;

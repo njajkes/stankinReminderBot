@@ -14,3 +14,12 @@ export async function getGroupByGID(gid:number) {
   const group = await groupModel.findOne({groupID: gid})
   return group
 }
+
+export async function createGroup(gName:string, tracked: boolean, from: {id: number, username: string}) {
+  await groupModel.create({
+    groupName: gName,
+    tracked: tracked,
+    adminID: from.id,
+    adminUsername: from.username
+  })
+}

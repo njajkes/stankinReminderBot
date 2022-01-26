@@ -39,6 +39,7 @@ exports.__esModule = true;
 exports.addTaskDescription = exports.addTask = void 0;
 var tasks_1 = require("../controllers/tasks");
 var commandDescription_1 = require("./commandDescription");
+var timeValidation_1 = require("../utils/timeValidation");
 function addTask(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var query, query_time, time, discipline, description;
@@ -49,8 +50,15 @@ function addTask(ctx) {
                 .split('-').join(' ')
                 .split('.').join(' ')
                 .split(' ').slice(2);
+            if (query.length < 6) {
+                ctx.telegram.sendMessage(ctx.message.chat.id, "Введено недостаточно параметров 🤕\nПожалуйта, введите данные по форме. Подробнее: /help add_task");
+                return [2 /*return*/];
+            }
             query_time = query.slice(0, 4);
             _a = [query_time[1], query_time[0]], query_time[0] = _a[0], query_time[1] = _a[1];
+            if (!(0, timeValidation_1.timeValidation)(query_time)) {
+                ctx.telegram.sendMessage(ctx.message.chat.id, "Неправильный ввод даты и/или времени 🤕\nПожалуйста заполните дату по форме. Подробнее: /help add_task");
+            }
             time = (new Date(query_time.join(' '))).getTime();
             discipline = query[query.length - 1].split('_').join(' ');
             description = query.slice(4, query.length - 1).join(' ');
@@ -61,4 +69,4 @@ function addTask(ctx) {
     });
 }
 exports.addTask = addTask;
-exports.addTaskDescription = new commandDescription_1.comDesc("/add_task [time] [description] [discipline]", "добавляет персональную задачу", "time - время в формате \"DD MM YYYY hh:mm\"", "description - содержит описание задачи", "discipline - содержит предмет, по поводу которого срабатывает напоминание. \n    ВАЖНО: При указании предмета, пробелы заменяются нижними подчеркиваниями для успешного парса строки", "Пример: /add_task 01 01 2025 15:55 Сдать контрольную Математическая_логика_и_теория_алгоритмов");
+exports.addTaskDescription = new commandDescription_1.comDesc("/add_task [time] [description] [discipline]", "добавляет персональную задачу", 0, "time - время в формате \"DD MM YYYY hh:mm\"", "description - содержит описание задачи", "discipline - содержит предмет, по поводу которого срабатывает напоминание. \n    ВАЖНО: При указании предмета, пробелы заменяются нижними подчеркиваниями для успешного парса строки", "Пример: /add_task 01 01 2025 15:55 Сдать контрольную Математическая_логика_и_теория_алгоритмов");

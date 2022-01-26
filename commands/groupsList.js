@@ -41,7 +41,7 @@ var groups_1 = require("../controllers/groups");
 var commandDescription_1 = require("./commandDescription");
 function groupsList(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var result, groups, _i, groups_2, k, groupID, groupName;
+        var result, groups, _i, groups_2, k, _id, groupName;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -51,8 +51,8 @@ function groupsList(ctx) {
                     groups = _a.sent();
                     for (_i = 0, groups_2 = groups; _i < groups_2.length; _i++) {
                         k = groups_2[_i];
-                        groupID = k.groupID, groupName = k.groupName;
-                        result += '\n' + groupID + '. ' + groupName + ';';
+                        _id = k._id, groupName = k.groupName;
+                        result += '\n' + _id + '. ' + groupName + ';';
                     }
                     ctx.telegram.sendMessage(ctx.message.chat.id, result);
                     return [2 /*return*/];
@@ -61,4 +61,4 @@ function groupsList(ctx) {
     });
 }
 exports.groupsList = groupsList;
-exports.groupListDescription = new commandDescription_1.comDesc("/groups_list", "вывод всех видимых групп;");
+exports.groupListDescription = new commandDescription_1.comDesc("/groups_list", "вывод всех видимых групп;", 0);

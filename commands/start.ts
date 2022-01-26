@@ -1,11 +1,10 @@
-import { findUserByUID, newUser } from "../controllers/users"
+import { findUserByUID, createUser } from "../controllers/users"
 import { comDesc } from "./commandDescription"
 
 export async function start(ctx) {
   const user = await findUserByUID(ctx.from.id)
-  console.log(user)
   if (!user) {
-    await newUser(ctx.from.id, 1, "member")
+    await createUser(ctx.from.id, ctx.from.username, 3, "member")
     ctx.telegram.sendMessage(ctx.message.chat.id, 
       `Привет!\nЭто телеграм-бот таск-трекер для студентов МГТУ "СТАНКИН".\nДля начала работы напиши /help для вывода команд бота.`)
   }
@@ -14,4 +13,4 @@ export async function start(ctx) {
   }
 }
 
-export const startDescription = new comDesc("/start", "начало работы и приветственное сообщение;")
+export const startDescription = new comDesc("/start", "начало работы и приветственное сообщение;", 0)

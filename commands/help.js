@@ -37,31 +37,71 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.help = void 0;
+var addGroup_1 = require("./addGroup");
 var addTask_1 = require("./addTask");
+var commandDescription_1 = require("./commandDescription");
 var groupsList_1 = require("./groupsList");
 var start_1 = require("./start");
+var helpDescription = new commandDescription_1.comDesc("/help [flag/command]", "все команды и их синтаксис", 0, "flag - необязательный атрибут, подробнее: /help -h", "command - необязательный атрибут, ");
+var helpFlagsDescription = new commandDescription_1.comDesc("/help [flag]", "все команды и их синтаксис", 1, "flag - необязательный атрибут, устанавливает флаг, по которому будут выводиться команды", "Если флаг не был установлен, выводятся команды, доступные всем пользователям", "-h - выводит все флаги :)", "-adm - выводит команды админа группы", "-mod - выводит команды модератора группы");
 function help(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var result, descriptions;
+        var descriptions, perm, result, query, com;
         return __generator(this, function (_a) {
-            result = 'Список команд:\n';
             descriptions = [
                 start_1.startDescription,
+                helpDescription,
                 groupsList_1.groupListDescription,
-                addTask_1.addTaskDescription
+                addTask_1.addTaskDescription,
+                addGroup_1.addGroupDescription,
+                helpFlagsDescription,
             ];
-            descriptions.forEach(function (description) {
-                var commandName = description.commandName, commandDescription = description.commandDescription, args = description.args;
-                result += '\n' + commandName + ' — ' + commandDescription;
-                if (args.length > 0) {
-                    args.forEach(function (argument) {
-                        result += '\n    ' + argument;
-                    });
+            perm = 0;
+            query = ctx.update.message.text.split(' ')[1];
+            if (query) {
+                switch (query) {
+                    case '-mod':
+                        perm = 3;
+                        break;
+                    case '-adm':
+                        perm = 2;
+                        break;
+                    case '-h':
+                        perm = 1;
+                        break;
+                    default:
+                        com = query;
                 }
-            });
+            }
+            result = helpMessageForming(descriptions, perm, com);
             ctx.telegram.sendMessage(ctx.message.chat.id, result);
             return [2 /*return*/];
         });
     });
 }
 exports.help = help;
+function helpMessageForming(commandsDescriptions, permissionLevel, command) {
+    var result, i = 1;
+    if (command) {
+        result = 'Информация по команде:';
+        var com = commandsDescriptions.find(function (el) { return el.commandName.slice(1).split(' ')[0] == command; });
+        if (com) {
+            var commandName = com.commandName, commandDescription = com.commandDescription, args = com.args;
+            result += '\n' + commandName + ' — ' + commandDescription;
+            if (args.length > 0) {
+                args.forEach(function (argument) {
+                    result += '\n    ' + argument;
+                });
+            }
+            return result;
+        }
+    }
+    result = 'Список команд: ';
+    var descs = commandsDescriptions.filter(function (desc) { return desc.permissions == permissionLevel; });
+    descs.forEach(function (description) {
+        var commandName = description.commandName, commandDescription = description.commandDescription, args = description.args;
+        result += '\n' + i.toString() + '. ' + commandName + ' — ' + commandDescription;
+        i++;
+    });
+    return result;
+}

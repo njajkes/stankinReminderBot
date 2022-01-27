@@ -36,30 +36,52 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.startDescription = exports.start = void 0;
-var users_1 = require("../controllers/users");
+exports.joinGroupDescription = exports.joinGroup = void 0;
+var groups_1 = require("../models/groups");
+var users_1 = require("../models/users");
 var commandDescription_1 = require("./commandDescription");
-function start(ctx) {
+function joinGroup(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var user;
+        var query, group, user;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, users_1.findUserByUID)(ctx.from.id)];
+                case 0:
+                    query = ctx.message.text.split(' ').slice(1);
+                    if (query.length != 1) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Введено неверное количество аргументов 🤕\nПожалуйста, проверьте корректность введённых данных\nПодробнее: /help join_group");
+                    }
+                    return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: query[0] })];
                 case 1:
-                    user = _a.sent();
-                    if (!!user) return [3 /*break*/, 3];
-                    return [4 /*yield*/, (0, users_1.createUser)(ctx.from.id, ctx.from.username, 3, "member")];
+                    group = _a.sent();
+                    if (!group) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такой группы не найдено 🤕\nПожалуйста, проверьте корректность введённых данных");
+                        return [2 /*return*/];
+                    }
+                    return [4 /*yield*/, users_1.userModel.findOne({ uid: ctx.from.id, groupName: query[0] })];
                 case 2:
-                    _a.sent();
-                    ctx.telegram.sendMessage(ctx.message.chat.id, "\u041F\u0440\u0438\u0432\u0435\u0442!\n\u042D\u0442\u043E \u0442\u0435\u043B\u0435\u0433\u0440\u0430\u043C-\u0431\u043E\u0442 \u0442\u0430\u0441\u043A-\u0442\u0440\u0435\u043A\u0435\u0440 \u0434\u043B\u044F \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u041C\u0413\u0422\u0423 \"\u0421\u0422\u0410\u041D\u041A\u0418\u041D\".\n\u0414\u043B\u044F \u043D\u0430\u0447\u0430\u043B\u0430 \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0430\u043F\u0438\u0448\u0438 /help \u0434\u043B\u044F \u0432\u044B\u0432\u043E\u0434\u0430 \u043A\u043E\u043C\u0430\u043D\u0434 \u0431\u043E\u0442\u0430.");
-                    return [3 /*break*/, 4];
+                    user = _a.sent();
+                    if (user) {
+                        if (user.role == "sended" || user.role == "pending") {
+                            ctx.telegram.sendMessage(ctx.message.chat.id, "Вы уже подали заявку в эту группу 🤕");
+                        }
+                        else {
+                            ctx.telegram.sendMessage(ctx.message.chat.id, "Вы уже состоите в этой группе 🤕");
+                        }
+                        return [2 /*return*/];
+                    }
+                    return [4 /*yield*/, users_1.userModel.create({
+                            uid: ctx.from.id,
+                            username: ctx.from.username,
+                            groupName: group.groupName,
+                            role: "sended"
+                        })];
                 case 3:
-                    ctx.telegram.sendMessage(ctx.message.chat.id, 'И тебе снова привет! Чтобы узнать команды бота, напиши /help');
-                    _a.label = 4;
-                case 4: return [2 /*return*/];
+                    _a.sent();
+                    ctx.telegram.sendMessage(ctx.message.chat.id, "Заявка успешно отправлена!");
+                    return [2 /*return*/];
             }
         });
     });
 }
-exports.start = start;
-exports.startDescription = new commandDescription_1.comDesc("/start", "начало работы и приветственное сообщение", 0);
+exports.joinGroup = joinGroup;
+exports.joinGroupDescription = new commandDescription_1.comDesc("/join_group [group_name]", "отправить заявку на вступление в группу", 0, "group_name - название группы одним словом (как написано в /group_list, например: \"клан_крутые_гремлины\" вместо \"клан крутые гремлины\")", "Пример: /join_group клан_крутые_гремлины");

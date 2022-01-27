@@ -39,8 +39,8 @@ exports.__esModule = true;
 var telegraf_1 = require("telegraf");
 var mongoose = require("mongoose");
 var dotenv = require("dotenv");
-var commands_1 = require("./commands/commands");
 var taskTracker_1 = require("./services/taskTracker");
+var bindCommandsOnBot_1 = require("./utils/bindCommandsOnBot");
 var _a = dotenv.config().parsed, TOKEN = _a.TOKEN, MONGO = _a.MONGO;
 function databaseStart() {
     return __awaiter(this, void 0, void 0, function () {
@@ -57,11 +57,7 @@ function databaseStart() {
 }
 databaseStart();
 var bot = new telegraf_1.Telegraf(TOKEN);
-bot.command('start', commands_1.commands.start);
-bot.command('help', commands_1.commands.help);
-bot.command('groups_list', commands_1.commands.groupsList);
-bot.command('add_task', commands_1.commands.addTask);
-bot.command('add_group', commands_1.commands.addGroup);
+(0, bindCommandsOnBot_1.bindCommandsOnBot)(bot);
 bot.command('ctx', function (ctx) {
     console.dir(ctx.from);
 });

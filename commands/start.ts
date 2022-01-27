@@ -1,7 +1,7 @@
 import { findUserByUID, createUser } from "../controllers/users"
 import { comDesc } from "./commandDescription"
 
-export async function start(ctx) {
+export async function start(ctx): Promise<void> {
   const user = await findUserByUID(ctx.from.id)
   if (!user) {
     await createUser(ctx.from.id, ctx.from.username, 3, "member")
@@ -13,4 +13,4 @@ export async function start(ctx) {
   }
 }
 
-export const startDescription = new comDesc("/start", "начало работы и приветственное сообщение;", 0)
+export const startDescription = new comDesc("/start", "начало работы и приветственное сообщение", 0)

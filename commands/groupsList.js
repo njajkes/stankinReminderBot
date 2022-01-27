@@ -61,4 +61,4 @@ function groupsList(ctx) {
     });
 }
 exports.groupsList = groupsList;
-exports.groupListDescription = new commandDescription_1.comDesc("/groups_list", "вывод всех видимых групп;", 0);
+exports.groupListDescription = new commandDescription_1.comDesc("/groups_list", "вывести список всех видимых групп", 0);

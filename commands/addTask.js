@@ -69,4 +69,4 @@ function addTask(ctx) {
     });
 }
 exports.addTask = addTask;
-exports.addTaskDescription = new commandDescription_1.comDesc("/add_task [time] [description] [discipline]", "добавляет персональную задачу", 0, "time - время в формате \"DD MM YYYY hh:mm\"", "description - содержит описание задачи", "discipline - содержит предмет, по поводу которого срабатывает напоминание. \n    ВАЖНО: При указании предмета, пробелы заменяются нижними подчеркиваниями для успешного парса строки", "Пример: /add_task 01 01 2025 15:55 Сдать контрольную Математическая_логика_и_теория_алгоритмов");
+exports.addTaskDescription = new commandDescription_1.comDesc("/add_task [time] [description] [discipline]", "добавить персональную задачу", 0, "time - время в формате \"DD MM YYYY hh:mm\"", "description - содержит описание задачи", "discipline - содержит предмет, по поводу которого срабатывает напоминание. \n    ВАЖНО: При указании предмета, пробелы заменяются нижними подчеркиваниями для успешного парса строки", "Пример: /add_task 01 01 2025 15:55 Сдать контрольную Математическая_логика_и_теория_алгоритмов");

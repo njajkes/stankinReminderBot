@@ -2,7 +2,7 @@ import { createTask } from "../controllers/tasks";
 import { comDesc } from "./commandDescription";
 import { timeValidation } from "../utils/timeValidation"
 
-export async function addTask(ctx) {
+export async function addTask(ctx):Promise<void> {
   const query: string[] = 
   ctx.update.message.text
     .split('/').join(' ')
@@ -32,7 +32,7 @@ export async function addTask(ctx) {
 
 export const addTaskDescription = new comDesc(
   "/add_task [time] [description] [discipline]", 
-  "добавляет персональную задачу",
+  "добавить персональную задачу",
   0,
   "time - время в формате \"DD MM YYYY hh:mm\"",
   "description - содержит описание задачи",

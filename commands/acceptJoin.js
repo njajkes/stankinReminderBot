@@ -36,43 +36,50 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.addGroupDescription = exports.addGroup = void 0;
-var groups_1 = require("../controllers/groups");
-var groups_2 = require("../models/groups");
+exports.acceptJoinDescription = exports.acceptJoin = void 0;
+var groups_1 = require("../models/groups");
+var users_1 = require("../models/users");
 var commandDescription_1 = require("./commandDescription");
-function addGroup(ctx) {
+function acceptJoin(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var query, tracked, groupName, gnameCheck;
+        var query, group, user;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    query = ctx.update.message.text
-                        .split(' ').slice(1);
+                    query = ctx.message.text.split(' ').slice(1);
                     if (query.length != 2) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Некорректное количество параметров 🤕\nПожалуйта, введите данные по форме. Подробнее: /help add_group");
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Введено неверное количество аргументов 🤕\nПожалуйста, проверьте корректность введённых данных.\nПодробнее: /help accept_join");
                         return [2 /*return*/];
                     }
-                    tracked = +query[query.length - 1];
-                    if (isNaN(tracked)) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "В качестве последнего параметра введено не число 🤕\nПожалуйта, введите данные по форме. Подробнее: /help add_group");
-                        return [2 /*return*/];
-                    }
-                    groupName = query.slice(0, query.length - 1).join(' ');
-                    return [4 /*yield*/, groups_2.groupModel.findOne({ groupName: groupName })];
+                    return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: query[0], adminID: ctx.from.id })];
                 case 1:
-                    gnameCheck = _a.sent();
-                    if (gnameCheck) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "К сожалению, такая группа уже существует 🤕\nПопробуйте использовать другое название!");
+                    group = _a.sent();
+                    if (!group) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такой группы не существует, либо вы не являетесь админом в ней 🤕");
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, (0, groups_1.createGroup)(groupName, !!tracked, ctx.from)];
+                    return [4 /*yield*/, users_1.userModel.findOne({ username: query[1], groupName: query[0] })];
                 case 2:
+                    user = _a.sent();
+                    if (!user) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такой пользователь не найден в списке ожидающих 🤕");
+                        return [2 /*return*/];
+                    }
+                    if (user.role == "sended" || user.role == "pending") {
+                        user.role = "member";
+                    }
+                    else {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Пользователь уже является участником группы 🤕");
+                        return [2 /*return*/];
+                    }
+                    return [4 /*yield*/, user.save()];
+                case 3:
                     _a.sent();
-                    ctx.telegram.sendMessage(ctx.message.chat.id, "Группа была успешно добавлена!\n");
+                    ctx.telegram.sendMessage(ctx.message.chat.id, "\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C @".concat(user.username, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432 \u0433\u0440\u0443\u043F\u043F\u0443!"));
                     return [2 /*return*/];
             }
         });
     });
 }
-exports.addGroup = addGroup;
-exports.addGroupDescription = new commandDescription_1.comDesc("/add_group [group_name] [tracked]", "добавить группу", 0, "group_name - название группы (1 слово без пробелов)", "tracked - будет ли группа отображаться в общем списке групп (0 или 1)", "Пример: /add_group клан_крутые_гремлины 0");
+exports.acceptJoin = acceptJoin;
+exports.acceptJoinDescription = new commandDescription_1.comDesc("/accept_join [group_name] [username]", "принять заявку на вступление в группу", 2, "group_name - название группы одним словом", "username - юзернейм кандидата на вступление (без символа \"@\"", "Пример: /accept_join клан_крутые_гремлины kirito993");

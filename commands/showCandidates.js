@@ -36,43 +36,56 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.addGroupDescription = exports.addGroup = void 0;
-var groups_1 = require("../controllers/groups");
-var groups_2 = require("../models/groups");
+exports.showCandidates = exports.showCandidatesDescription = void 0;
+var groups_1 = require("../models/groups");
+var users_1 = require("../models/users");
 var commandDescription_1 = require("./commandDescription");
-function addGroup(ctx) {
+exports.showCandidatesDescription = new commandDescription_1.comDesc("/show_candidates [group_name]", "вывести список всех ожидающих вступления в группу", 2, "group_name - название группы, в которой вы являетесь админом");
+function showCandidates(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var query, tracked, groupName, gnameCheck;
+        var query, group, users, result, i;
+        var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    query = ctx.update.message.text
-                        .split(' ').slice(1);
-                    if (query.length != 2) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Некорректное количество параметров 🤕\nПожалуйта, введите данные по форме. Подробнее: /help add_group");
+                    query = ctx.message.text.split(' ').slice(1);
+                    if (query.length != 1) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Введено неверное количество аргументов 🤕\nПожалуйста, проверьте корректность введённых данных.\nПодробнее: /help show_candidates");
                         return [2 /*return*/];
                     }
-                    tracked = +query[query.length - 1];
-                    if (isNaN(tracked)) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "В качестве последнего параметра введено не число 🤕\nПожалуйта, введите данные по форме. Подробнее: /help add_group");
-                        return [2 /*return*/];
-                    }
-                    groupName = query.slice(0, query.length - 1).join(' ');
-                    return [4 /*yield*/, groups_2.groupModel.findOne({ groupName: groupName })];
+                    return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: query[0], adminID: ctx.from.id })];
                 case 1:
-                    gnameCheck = _a.sent();
-                    if (gnameCheck) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "К сожалению, такая группа уже существует 🤕\nПопробуйте использовать другое название!");
+                    group = _a.sent();
+                    if (!group) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такой группы не существует, либо вы не являетесь админом в ней 🤕");
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, (0, groups_1.createGroup)(groupName, !!tracked, ctx.from)];
+                    return [4 /*yield*/, users_1.userModel.find({ groupName: group.groupName, role: ["pending", "sended"] })];
                 case 2:
-                    _a.sent();
-                    ctx.telegram.sendMessage(ctx.message.chat.id, "Группа была успешно добавлена!\n");
+                    users = _a.sent();
+                    if (users.length < 1) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "\u041E\u0436\u0438\u0434\u0430\u044E\u0449\u0438\u0445 \u0432\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u044F \u0432 \u0433\u0440\u0443\u043F\u043F\u0443 ".concat(group.groupName, " \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E :p"));
+                        return [2 /*return*/];
+                    }
+                    result = 'Список ожидающих вступления в группу ' + group.groupName + ": ", i = 1;
+                    users.forEach(function (el) { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    el.role = "pending";
+                                    return [4 /*yield*/, el.save()];
+                                case 1:
+                                    _a.sent();
+                                    result += "\n" + i.toString() + ". @" + el.username;
+                                    i++;
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                    ctx.telegram.sendMessage(ctx.message.chat.id, result);
                     return [2 /*return*/];
             }
         });
     });
 }
-exports.addGroup = addGroup;
-exports.addGroupDescription = new commandDescription_1.comDesc("/add_group [group_name] [tracked]", "добавить группу", 0, "group_name - название группы (1 слово без пробелов)", "tracked - будет ли группа отображаться в общем списке групп (0 или 1)", "Пример: /add_group клан_крутые_гремлины 0");
+exports.showCandidates = showCandidates;

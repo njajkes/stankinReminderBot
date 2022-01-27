@@ -2,7 +2,7 @@ import { createGroup } from "../controllers/groups";
 import { groupModel } from "../models/groups";
 import { comDesc } from "./commandDescription";
 
-export async function addGroup(ctx) {
+export async function addGroup(ctx): Promise<void> {
   const query: string[] = 
     ctx.update.message.text
     .split(' ').slice(1)
@@ -16,12 +16,13 @@ export async function addGroup(ctx) {
     return
   }
   const groupName = query.slice(0, query.length - 1).join(' ')
-  const gnameCheck = groupModel.findOne({groupName: groupName})
+  const gnameCheck = await groupModel.findOne({groupName: groupName})
   if (gnameCheck) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "К сожалению, такая группа уже существует 🤕\nПопробуйте использовать другое название!")
+    return
   }
   await createGroup(groupName, !!tracked, ctx.from)
   ctx.telegram.sendMessage(ctx.message.chat.id, "Группа была успешно добавлена!\n")
 }
 
-export const addGroupDescription = new comDesc("/add_group [group_name] [tracked]", "добавление группы", 0, "group_name - название группы (1 слово без пробелов)", "tracked - будет ли группа отображаться в общем списке групп (0 или 1)", "Пример: /add_group клан_крутые_гремлины 0")
+export const addGroupDescription = new comDesc("/add_group [group_name] [tracked]", "добавить группу", 0, "group_name - название группы (1 слово без пробелов)", "tracked - будет ли группа отображаться в общем списке групп (0 или 1)", "Пример: /add_group клан_крутые_гремлины 0")

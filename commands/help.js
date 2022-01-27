@@ -36,26 +36,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.help = void 0;
-var addGroup_1 = require("./addGroup");
-var addTask_1 = require("./addTask");
+exports.help = exports.helpFlagsDescription = exports.helpDescription = void 0;
 var commandDescription_1 = require("./commandDescription");
-var groupsList_1 = require("./groupsList");
-var start_1 = require("./start");
-var helpDescription = new commandDescription_1.comDesc("/help [flag/command]", "все команды и их синтаксис", 0, "flag - необязательный атрибут, подробнее: /help -h", "command - необязательный атрибут, ");
-var helpFlagsDescription = new commandDescription_1.comDesc("/help [flag]", "все команды и их синтаксис", 1, "flag - необязательный атрибут, устанавливает флаг, по которому будут выводиться команды", "Если флаг не был установлен, выводятся команды, доступные всем пользователям", "-h - выводит все флаги :)", "-adm - выводит команды админа группы", "-mod - выводит команды модератора группы");
+var commands_1 = require("./commands");
+exports.helpDescription = new commandDescription_1.comDesc("/help [flag/command]", "все команды и их синтаксис", 0, "flag - необязательный атрибут, подробнее: /help -h", "command - необязательный атрибут, ");
+exports.helpFlagsDescription = new commandDescription_1.comDesc("/help [flag]", "все команды и их синтаксис", 1, "flag - необязательный атрибут, устанавливает флаг, по которому будут выводиться команды", "Если флаг не был установлен, выводятся команды, доступные всем пользователям", "-h - выводит все флаги :)", "-adm - выводит команды админа группы", "-mod - выводит команды модератора группы");
 function help(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var descriptions, perm, result, query, com;
         return __generator(this, function (_a) {
-            descriptions = [
-                start_1.startDescription,
-                helpDescription,
-                groupsList_1.groupListDescription,
-                addTask_1.addTaskDescription,
-                addGroup_1.addGroupDescription,
-                helpFlagsDescription,
-            ];
+            descriptions = commands_1.commandDescriptions;
             perm = 0;
             query = ctx.update.message.text.split(' ')[1];
             if (query) {

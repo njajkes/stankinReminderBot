@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv'
 
 import { taskTracker } from "./services/taskTracker"
 import { bindCommandsOnBot } from './utils/bindCommandsOnBot'
+import { callSendedJoinRequests } from './services/callSendedJoinRequests'
 
 const { TOKEN, MONGO } = dotenv.config().parsed
 async function databaseStart() {
@@ -26,7 +27,11 @@ bot.on("message", (ctx) => {
 })
 
 setInterval(async () => {
+  await callSendedJoinRequests(bot) // not tested shit
+}, 1800000) // every 30min
+
+setInterval(async () => {
   await taskTracker(bot)
-}, 60000)
+}, 60000) // every 1min
 
 bot.launch()

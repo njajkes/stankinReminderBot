@@ -41,6 +41,7 @@ var mongoose = require("mongoose");
 var dotenv = require("dotenv");
 var taskTracker_1 = require("./services/taskTracker");
 var bindCommandsOnBot_1 = require("./utils/bindCommandsOnBot");
+var callSendedJoinRequests_1 = require("./services/callSendedJoinRequests");
 var _a = dotenv.config().parsed, TOKEN = _a.TOKEN, MONGO = _a.MONGO;
 function databaseStart() {
     return __awaiter(this, void 0, void 0, function () {
@@ -64,6 +65,16 @@ bot.command('ctx', function (ctx) {
 bot.on("message", function (ctx) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "Пожалуйста, введите какую-нибудь команду! Я не понимаю по-другому 😖\nСписок всех команд: /help");
 });
+setInterval(function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, callSendedJoinRequests_1.callSendedJoinRequests)(bot)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); }, 1800000);
 setInterval(function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {

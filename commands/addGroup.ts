@@ -10,12 +10,12 @@ export async function addGroup(ctx): Promise<void> {
     ctx.telegram.sendMessage(ctx.message.chat.id, "Некорректное количество параметров 🤕\nПожалуйта, введите данные по форме. Подробнее: /help add_group")
     return
   }
-  const tracked:number = +query[query.length - 1]
+  const tracked:number = +query[1]
   if (isNaN(tracked)) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "В качестве последнего параметра введено не число 🤕\nПожалуйта, введите данные по форме. Подробнее: /help add_group")
     return
   }
-  const groupName = query.slice(0, query.length - 1).join(' ')
+  const groupName = query[0]
   const gnameCheck = await groupModel.findOne({groupName: groupName})
   if (gnameCheck) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "К сожалению, такая группа уже существует 🤕\nПопробуйте использовать другое название!")

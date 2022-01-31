@@ -1,10 +1,10 @@
-import { findUserByUID, createUser } from "../controllers/users"
+import { findUserByUID, createNewUser } from "../controllers/users"
 import { comDesc } from "./commandDescription"
 
 export async function start(ctx): Promise<void> {
   const user = await findUserByUID(ctx.from.id)
   if (!user) {
-    await createUser(ctx.from.id, ctx.from.username, 3, "member")
+    await createNewUser(ctx.from.id, ctx.from.username)
     ctx.telegram.sendMessage(ctx.message.chat.id, 
       `Привет!\nЭто телеграм-бот таск-трекер для студентов МГТУ "СТАНКИН".\nДля начала работы напиши /help для вывода команд бота.`)
   }

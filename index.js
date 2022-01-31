@@ -68,13 +68,13 @@ bot.on("message", function (ctx) {
 setInterval(function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, callSendedJoinRequests_1.callSendedJoinRequests)(bot)];
+            case 0: return [4 /*yield*/, (0, callSendedJoinRequests_1.callSendedJoinRequests)(bot)]; // not tested shit
             case 1:
-                _a.sent();
+                _a.sent(); // not tested shit
                 return [2 /*return*/];
         }
     });
-}); }, 1800000);
+}); }, 1800000); // every 30min
 setInterval(function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -84,5 +84,5 @@ setInterval(function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [2 /*return*/];
         }
     });
-}); }, 60000);
+}); }, 60000); // every 1min
 bot.launch();

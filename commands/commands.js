@@ -9,6 +9,7 @@ var addGroup_1 = require("./addGroup");
 var joinGroup_1 = require("./joinGroup");
 var acceptJoin_1 = require("./acceptJoin");
 var showCandidates_1 = require("./showCandidates");
+var addMod_1 = require("./addMod");
 var command = /** @class */ (function () {
     function command(func, name) {
         this.func = func,
@@ -24,7 +25,8 @@ exports.commands = [
     new command(addGroup_1.addGroup, "add_group"),
     new command(joinGroup_1.joinGroup, "join_group"),
     new command(acceptJoin_1.acceptJoin, "accept_join"),
-    new command(showCandidates_1.showCandidates, "show_candidates")
+    new command(showCandidates_1.showCandidates, "show_candidates"),
+    new command(addMod_1.addMod, "add_mod")
 ];
 exports.commandDescriptions = [
     start_1.startDescription,
@@ -36,4 +38,5 @@ exports.commandDescriptions = [
     joinGroup_1.joinGroupDescription,
     acceptJoin_1.acceptJoinDescription,
     showCandidates_1.showCandidatesDescription,
+    addMod_1.addModDescription
 ];

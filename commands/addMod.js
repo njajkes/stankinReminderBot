@@ -36,53 +36,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.joinGroupDescription = exports.joinGroup = void 0;
+exports.addModDescription = exports.addMod = void 0;
 var groups_1 = require("../models/groups");
 var users_1 = require("../models/users");
 var commandDescription_1 = require("./commandDescription");
-function joinGroup(ctx) {
+function addMod(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var query, group, user;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     query = ctx.message.text.split(' ').slice(1);
-                    if (query.length != 1) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Введено неверное количество аргументов 🤕\nПожалуйста, проверьте корректность введённых данных\nПодробнее: /help join_group");
+                    if (query.length != 2) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Введено неверное количество аргументов 🤕\nПожалуйста, проверьте корректность введённых данных\nПодробнее: /help add_mod");
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: query[0] })];
+                    return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: query[0], adminID: ctx.from.id })];
                 case 1:
                     group = _a.sent();
                     if (!group) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такой группы не найдено 🤕\nПожалуйста, проверьте корректность введённых данных");
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Не найдено такой группы, либо вы в ней не админ 🤕");
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, users_1.userModel.findOne({ uid: ctx.from.id, groupName: query[0] })];
+                    return [4 /*yield*/, users_1.userModel.findOne({ groupName: query[0], username: query[1] })];
                 case 2:
                     user = _a.sent();
-                    if (user) {
-                        if (user.role == "sended" || user.role == "pending") {
-                            ctx.telegram.sendMessage(ctx.message.chat.id, "Вы уже подали заявку в эту группу 🤕");
-                        }
-                        else {
-                            ctx.telegram.sendMessage(ctx.message.chat.id, "Вы уже состоите в этой группе 🤕");
-                        }
+                    if (!user || user.role == "sended" || user.role == "pending") {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такого пользователя в вашей группе нет 🤕\nИспользуйте /show_candidates для того, чтобы посмотреть заявки в группу");
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, users_1.userModel.create({
-                            uid: ctx.from.id,
-                            username: ctx.from.username,
-                            groupName: group.groupName,
-                            role: "sended"
-                        })];
+                    if (user.role != "member") {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Этот пользователь уже является модератором, либо админом 🤕");
+                        return [2 /*return*/];
+                    }
+                    user.role = "moderator";
+                    return [4 /*yield*/, user.save()];
                 case 3:
                     _a.sent();
-                    ctx.telegram.sendMessage(ctx.message.chat.id, "Заявка на вступление в группу " + group.groupName + " успешно отправлена!");
+                    ctx.telegram.sendMessage(ctx.message.chat.id, "Пользователь успешно добавлен в модераторы!");
                     return [2 /*return*/];
             }
         });
     });
 }
-exports.joinGroup = joinGroup;
-exports.joinGroupDescription = new commandDescription_1.comDesc("/join_group [group_name]", "отправить заявку на вступление в группу", 0, "group_name - название группы одним словом (как написано в /group_list, например: \"клан_крутые_гремлины\" вместо \"клан крутые гремлины\")", "Пример: /join_group клан_крутые_гремлины");
+exports.addMod = addMod;
+exports.addModDescription = new commandDescription_1.comDesc("/add_mod [group_name] [username]", "добавить модератора в группу", 2, "group_name - группа, в которую вы хотите добавить модератора", "username - ник пользователя (без \"@\"), которого вы хотите добавить в модераторы", "Пример: /add_mod клан_крутые_гремлины vasya");

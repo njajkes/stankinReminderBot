@@ -48,7 +48,7 @@ function start(ctx) {
                 case 1:
                     user = _a.sent();
                     if (!!user) return [3 /*break*/, 3];
-                    return [4 /*yield*/, (0, users_1.createUser)(ctx.from.id, ctx.from.username, 3, "member")];
+                    return [4 /*yield*/, (0, users_1.createNewUser)(ctx.from.id, ctx.from.username)];
                 case 2:
                     _a.sent();
                     ctx.telegram.sendMessage(ctx.message.chat.id, "\u041F\u0440\u0438\u0432\u0435\u0442!\n\u042D\u0442\u043E \u0442\u0435\u043B\u0435\u0433\u0440\u0430\u043C-\u0431\u043E\u0442 \u0442\u0430\u0441\u043A-\u0442\u0440\u0435\u043A\u0435\u0440 \u0434\u043B\u044F \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u041C\u0413\u0422\u0423 \"\u0421\u0422\u0410\u041D\u041A\u0418\u041D\".\n\u0414\u043B\u044F \u043D\u0430\u0447\u0430\u043B\u0430 \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0430\u043F\u0438\u0448\u0438 /help \u0434\u043B\u044F \u0432\u044B\u0432\u043E\u0434\u0430 \u043A\u043E\u043C\u0430\u043D\u0434 \u0431\u043E\u0442\u0430.");

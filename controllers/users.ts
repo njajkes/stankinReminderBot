@@ -1,11 +1,11 @@
 import { userModel } from "../models/users"
 
-export async function createUser(uid: number, username: string, groupID: number, role: string): Promise<void> {
-  userModel.create({
+export async function createNewUser(uid: number, username: string): Promise<void> {
+  await userModel.create({
     uid: uid,
     username: username,
-    groupID: groupID,
-    role: role
+    groupID: 3,
+    role: "member"
   })
 }
 

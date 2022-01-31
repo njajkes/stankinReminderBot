@@ -58,6 +58,7 @@ function addTask(ctx) {
             _a = [query_time[1], query_time[0]], query_time[0] = _a[0], query_time[1] = _a[1];
             if (!(0, timeValidation_1.timeValidation)(query_time)) {
                 ctx.telegram.sendMessage(ctx.message.chat.id, "Неправильный ввод даты и/или времени 🤕\nПожалуйста заполните дату по форме. Подробнее: /help add_task");
+                return [2 /*return*/];
             }
             time = (new Date(query_time.join(' '))).getTime();
             discipline = query[query.length - 1].split('_').join(' ');

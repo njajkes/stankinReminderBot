@@ -6,6 +6,7 @@ import { addGroup, addGroupDescription } from './addGroup'
 import { joinGroup, joinGroupDescription } from './joinGroup'
 import { acceptJoin, acceptJoinDescription } from './acceptJoin'
 import { showCandidates, showCandidatesDescription } from './showCandidates'
+import { addMod, addModDescription } from './addMod'
 
 class command {
   func: (ctx: any) => Promise<void>
@@ -25,7 +26,8 @@ export const commands = [
   new command(addGroup, "add_group"),
   new command(joinGroup, "join_group"),
   new command(acceptJoin, "accept_join"),
-  new command(showCandidates, "show_candidates")
+  new command(showCandidates, "show_candidates"),
+  new command(addMod, "add_mod")
 ]
 
 export const commandDescriptions = [
@@ -38,4 +40,5 @@ export const commandDescriptions = [
   joinGroupDescription,
   acceptJoinDescription,
   showCandidatesDescription,
+  addModDescription
 ]

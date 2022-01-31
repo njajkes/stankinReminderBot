@@ -36,22 +36,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.findUserByUID = exports.createUser = void 0;
+exports.findUserByUID = exports.createNewUser = void 0;
 var users_1 = require("../models/users");
-function createUser(uid, username, groupID, role) {
+function createNewUser(uid, username) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            users_1.userModel.create({
-                uid: uid,
-                username: username,
-                groupID: groupID,
-                role: role
-            });
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, users_1.userModel.create({
+                        uid: uid,
+                        username: username,
+                        groupID: 3,
+                        role: "member"
+                    })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
         });
     });
 }
-exports.createUser = createUser;
+exports.createNewUser = createNewUser;
 function findUserByUID(uid) {
     return __awaiter(this, void 0, void 0, function () {
         var user;

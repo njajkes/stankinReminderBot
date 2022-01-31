@@ -18,8 +18,8 @@ export async function addTask(ctx):Promise<void> {
 
   if (!timeValidation(query_time)) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "Неправильный ввод даты и/или времени 🤕\nПожалуйста заполните дату по форме. Подробнее: /help add_task")
+    return
   }
-
 
   const time: number = (new Date(query_time.join(' '))).getTime()
   const discipline = query[query.length - 1].split('_').join(' ')

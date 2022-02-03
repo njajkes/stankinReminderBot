@@ -7,7 +7,7 @@ export interface Task {
   discipline: string,
   time: number,
   description: string,
-  status: string
+  status: string // done, waiting, pending, w8ing4accept, decline
 }
 
 export const taskSchema = new Schema<Task>({

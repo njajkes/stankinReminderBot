@@ -1,12 +1,12 @@
-import { getAllVisibleGroups } from "../controllers/groups";
-import { comDesc } from "./commandDescription";
+import { getAllVisibleGroups } from "../../controllers/groups";
+import { comDesc } from "../commands";
 
 export async function groupsList(ctx): Promise<void> {
   let result = 'Список отображаемых групп:\n'
   const groups = await getAllVisibleGroups()
   for (let k of groups) {
     const {_id, groupName} = k
-    result += '\n' + _id + '. ' + groupName + ';'
+    result += '\n' + _id + '. ' + groupName
   }
   ctx.telegram.sendMessage(ctx.message.chat.id, result)
 }

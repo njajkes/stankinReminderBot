@@ -1,5 +1,6 @@
-import { createTask, taskValidation } from "../controllers/tasks";
-import { comDesc } from "./commandDescription";
+import { createTask, taskValidation } from "../../controllers/tasks";
+import { SYNTAX_ERR_MESSAGE } from "../../utils/constants";
+import { comDesc } from "../commands";
 
 export async function addTask(ctx):Promise<void> {
   const query: string[] = 
@@ -8,12 +9,13 @@ export async function addTask(ctx):Promise<void> {
     .split('-').join(' ')
     .split('.').join(' ')
     .split(' ').slice(2)
-
+  
   if (!taskValidation(query)) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Нарушен синтаксис команды 🤕\nПожалуйста, проверьте корректность введённых данных\nПодробнее: /help add_task")
+    ctx.telegram.sendMessage(ctx.message.chat.id, SYNTAX_ERR_MESSAGE + "add_task")
     return
   }
 
+  [ query[0], query[1] ] = [ query[1], query[0] ]
   const time: number = (new Date(query.slice(0, 4).join(' '))).getTime()
   const discipline = query[4].split('_').join(' ')
   const description = query.slice(5).join(' ')

@@ -36,69 +36,58 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.callSendedJoinRequests = void 0;
-var groups_1 = require("../models/groups");
-var users_1 = require("../models/users");
-// regular notifications for group admins about new join requests  
-function callSendedJoinRequests(bot) {
+exports.showCandidatesDescription = exports.showCandidates = void 0;
+var groups_1 = require("../../models/groups");
+var users_1 = require("../../models/users");
+var constants_1 = require("../../utils/constants");
+var commands_1 = require("../commands");
+function showCandidates(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var candidates, admins, _i, candidates_1, candidate, group, _loop_1, _a, _b, admin;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0: return [4 /*yield*/, users_1.userModel.find({ role: "sended" })];
-                case 1:
-                    candidates = _c.sent();
-                    if (!candidates) {
+        var query, group, users, result, i, _i, users_2, el;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    query = ctx.message.text.split(' ').slice(1);
+                    if (query.length != 1) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.ARG_LEN_ERR_MESSAGE + "show_candidates");
                         return [2 /*return*/];
                     }
-                    admins = {};
-                    _i = 0, candidates_1 = candidates;
-                    _c.label = 2;
+                    return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: query[0], adminID: ctx.from.id })];
+                case 1:
+                    group = _a.sent();
+                    if (!group) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такой группы не существует, либо вы не являетесь админом в ней 🤕");
+                        return [2 /*return*/];
+                    }
+                    return [4 /*yield*/, users_1.userModel.find({ groupName: group.groupName, role: ["pending", "sended"] })];
                 case 2:
-                    if (!(_i < candidates_1.length)) return [3 /*break*/, 6];
-                    candidate = candidates_1[_i];
-                    return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: candidate.groupName })];
+                    users = _a.sent();
+                    if (users.length < 1) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "\u041E\u0436\u0438\u0434\u0430\u044E\u0449\u0438\u0445 \u0432\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u044F \u0432 \u0433\u0440\u0443\u043F\u043F\u0443 ".concat(group.groupName, " \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E :p"));
+                        return [2 /*return*/];
+                    }
+                    result = 'Список ожидающих вступления в группу ' + group.groupName + ": ", i = 1;
+                    _i = 0, users_2 = users;
+                    _a.label = 3;
                 case 3:
-                    group = _c.sent();
-                    if (!admins[group.adminID]) {
-                        admins[group.adminID] = {};
-                    }
-                    if (!admins[group.adminID][group.groupName]) {
-                        admins[group.adminID][group.groupName] = [candidate.username];
-                    }
-                    else {
-                        admins[group.adminID][group.groupName].push(candidate.username);
-                    }
-                    candidate.role = "pending";
-                    return [4 /*yield*/, candidate.save()];
+                    if (!(_i < users_2.length)) return [3 /*break*/, 6];
+                    el = users_2[_i];
+                    el.role = "pending";
+                    return [4 /*yield*/, el.save()];
                 case 4:
-                    _c.sent();
-                    _c.label = 5;
+                    _a.sent();
+                    result += "\n" + i.toString() + ". @" + el.username;
+                    i++;
+                    _a.label = 5;
                 case 5:
                     _i++;
-                    return [3 /*break*/, 2];
+                    return [3 /*break*/, 3];
                 case 6:
-                    _loop_1 = function (admin) {
-                        var msg = "Привет! Список жаждущий вступления в ваши группы:";
-                        var adminGroups = Object.getOwnPropertyNames(admins[admin]);
-                        adminGroups.forEach(function (group) {
-                            msg += '\n\n' + group + ':';
-                            var candidates = admins[admin][group];
-                            var i = 1;
-                            candidates.forEach(function (candidate) {
-                                msg += '\n' + i.toString() + '. @' + candidate;
-                                i++;
-                            });
-                        });
-                        bot.telegram.sendMessage(+admin, msg);
-                    };
-                    for (_a = 0, _b = Object.getOwnPropertyNames(admins); _a < _b.length; _a++) {
-                        admin = _b[_a];
-                        _loop_1(admin);
-                    }
+                    ctx.telegram.sendMessage(ctx.message.chat.id, result);
                     return [2 /*return*/];
             }
         });
     });
 }
-exports.callSendedJoinRequests = callSendedJoinRequests;
+exports.showCandidates = showCandidates;
+exports.showCandidatesDescription = new commands_1.comDesc("/show_candidates [group_name]", "вывести список всех ожидающих вступления в группу", 2, "group_name - название группы, в которой вы являетесь админом");

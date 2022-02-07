@@ -37,9 +37,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.showTasksDescription = exports.showTasks = void 0;
-var tasks_1 = require("../models/tasks");
-var timeToString_1 = require("../utils/timeToString");
-var commandDescription_1 = require("./commandDescription");
+var tasks_1 = require("../../models/tasks");
+var timeToString_1 = require("../../utils/timeToString");
+var commands_1 = require("../commands");
 function showTasks(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var w8ing4acceptTasks, pendingTasks, result;
@@ -51,27 +51,29 @@ function showTasks(ctx) {
                     return [4 /*yield*/, tasks_1.taskModel.find({ uid: ctx.from.id, $or: [{ status: "pending" }, { status: "waiting" }] }).sort({ time: 1 })];
                 case 2:
                     pendingTasks = _a.sent();
+                    if (!w8ing4acceptTasks.length && !pendingTasks.length) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Задач, ожидающих выполнения или принятия, не найдено 🤕");
+                        return [2 /*return*/];
+                    }
                     result = "";
-                    if (w8ing4acceptTasks) {
+                    if (w8ing4acceptTasks.length) {
                         result += "Список задач, ожидающих вашего принятия: ";
                         w8ing4acceptTasks.forEach(function (task) {
-                            result += "\n\nИдентификатор задачи:" + task._id.toString() + '.\nПредмет: ' + task.discipline + '\nОписание: ' + task.description + "\nК какому времени: " + (0, timeToString_1.timeToString)(task.time);
+                            result += "\n\nИдентификатор задачи: " + task._id.toString() + '.\nПредмет: ' + task.discipline + '\nОписание: ' + task.description + "\nК какому времени: " + (0, timeToString_1.timeToString)(task.time);
                         });
                         result += "\n\n";
                     }
-                    if (pendingTasks) {
+                    if (pendingTasks.length) {
                         result += "Список ваших задач: ";
                         pendingTasks.forEach(function (task) {
                             result += "\n\nИдентификатор задачи:" + task._id.toString() + '.\nПредмет: ' + task.discipline + '\nОписание: ' + task.description + "\nК какому времени: " + (0, timeToString_1.timeToString)(task.time);
                         });
                     }
-                    if (!w8ing4acceptTasks && !pendingTasks) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Задач, ожидающих выполнения или принятия, не найдено 🤕");
-                    }
+                    ctx.telegram.sendMessage(ctx.message.chat.id, result);
                     return [2 /*return*/];
             }
         });
     });
 }
 exports.showTasks = showTasks;
-exports.showTasksDescription = new commandDescription_1.comDesc("/show_tasks", "посмотреть свои задачи", 0, "Возвращает как задачи, которые вы приняли, так и те, которые ожидают одобрения/отклонения");
+exports.showTasksDescription = new commands_1.comDesc("/show_tasks", "посмотреть свои задачи", 0, "Возвращает как задачи, которые вы приняли, так и те, которые ожидают одобрения/отклонения");

@@ -36,43 +36,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.addGroupDescription = exports.addGroup = void 0;
-var groups_1 = require("../controllers/groups");
-var groups_2 = require("../models/groups");
-var commandDescription_1 = require("./commandDescription");
-function addGroup(ctx) {
+exports.groupListDescription = exports.groupsList = void 0;
+var groups_1 = require("../../controllers/groups");
+var commands_1 = require("../commands");
+function groupsList(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var query, tracked, groupName, gnameCheck;
+        var result, groups, _i, groups_2, k, _id, groupName;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    query = ctx.update.message.text
-                        .split(' ').slice(1);
-                    if (query.length != 2) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Некорректное количество параметров 🤕\nПожалуйта, введите данные по форме. Подробнее: /help add_group");
-                        return [2 /*return*/];
-                    }
-                    tracked = +query[query.length - 1];
-                    if (isNaN(tracked)) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "В качестве последнего параметра введено не число 🤕\nПожалуйта, введите данные по форме. Подробнее: /help add_group");
-                        return [2 /*return*/];
-                    }
-                    groupName = query.slice(0, query.length - 1).join(' ');
-                    return [4 /*yield*/, groups_2.groupModel.findOne({ groupName: groupName })];
+                    result = 'Список отображаемых групп:\n';
+                    return [4 /*yield*/, (0, groups_1.getAllVisibleGroups)()];
                 case 1:
-                    gnameCheck = _a.sent();
-                    if (gnameCheck) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "К сожалению, такая группа уже существует 🤕\nПопробуйте использовать другое название!");
-                        return [2 /*return*/];
+                    groups = _a.sent();
+                    for (_i = 0, groups_2 = groups; _i < groups_2.length; _i++) {
+                        k = groups_2[_i];
+                        _id = k._id, groupName = k.groupName;
+                        result += '\n' + _id + '. ' + groupName;
                     }
-                    return [4 /*yield*/, (0, groups_1.createGroup)(groupName, !!tracked, ctx.from)];
-                case 2:
-                    _a.sent();
-                    ctx.telegram.sendMessage(ctx.message.chat.id, "Группа была успешно добавлена!\n");
+                    ctx.telegram.sendMessage(ctx.message.chat.id, result);
                     return [2 /*return*/];
             }
         });
     });
 }
-exports.addGroup = addGroup;
-exports.addGroupDescription = new commandDescription_1.comDesc("/add_group [group_name] [tracked]", "добавить группу", 0, "group_name - название группы (1 слово без пробелов)", "tracked - будет ли группа отображаться в общем списке групп (0 или 1)", "Пример: /add_group клан_крутые_гремлины 0");
+exports.groupsList = groupsList;
+exports.groupListDescription = new commands_1.comDesc("/groups_list", "вывести список всех видимых групп", 0);

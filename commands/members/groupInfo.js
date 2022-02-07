@@ -36,48 +36,58 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.addModDescription = exports.addMod = void 0;
-var groups_1 = require("../models/groups");
-var users_1 = require("../models/users");
-var commandDescription_1 = require("./commandDescription");
-function addMod(ctx) {
+exports.groupInfoDescription = exports.groupInfo = void 0;
+var groups_1 = require("../../models/groups");
+var users_1 = require("../../models/users");
+var constants_1 = require("../../utils/constants");
+var commands_1 = require("../commands");
+function groupInfo(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var query, group, user;
+        var query, group, groupMembers, user, result, i;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    query = ctx.message.text.split(' ').slice(1);
-                    if (query.length != 2) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Введено неверное количество аргументов 🤕\nПожалуйста, проверьте корректность введённых данных\nПодробнее: /help add_mod");
+                    query = ctx.message.text.split(' ')[1];
+                    if (!query) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.ARG_LEN_ERR_MESSAGE + "group_info");
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: query[0], adminID: ctx.from.id })];
+                    return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: query })];
                 case 1:
                     group = _a.sent();
-                    if (!group) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Не найдено такой группы, либо вы в ней не админ 🤕");
-                        return [2 /*return*/];
-                    }
-                    return [4 /*yield*/, users_1.userModel.findOne({ groupName: query[0], username: query[1] })];
+                    return [4 /*yield*/, users_1.userModel.find({ groupName: query, $or: [{ role: "member" }, { role: "moderator" }, { role: "admin" }] })];
                 case 2:
-                    user = _a.sent();
-                    if (!user || user.role == "sended" || user.role == "pending") {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такого пользователя в вашей группе нет 🤕\nИспользуйте /show_candidates для того, чтобы посмотреть заявки в группу");
-                        return [2 /*return*/];
-                    }
-                    if (user.role != "member") {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Этот пользователь уже является модератором, либо админом 🤕");
-                        return [2 /*return*/];
-                    }
-                    user.role = "moderator";
-                    return [4 /*yield*/, user.save()];
+                    groupMembers = _a.sent();
+                    return [4 /*yield*/, users_1.userModel.findOne({ groupName: query, uid: ctx.from.id, $or: [{ role: "member" }, { role: "moderator" }, { role: "admin" }] })];
                 case 3:
-                    _a.sent();
-                    ctx.telegram.sendMessage(ctx.message.chat.id, "Пользователь успешно добавлен в модераторы!");
+                    user = _a.sent();
+                    if (!user) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Вы не состоите в группе, информацию о которой хотите получить");
+                        return [2 /*return*/];
+                    }
+                    if (!group) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такой группы не найдено");
+                        return [2 /*return*/];
+                    }
+                    if (group.groupName == "Community") { // i did this in order not to show info about all users who use bot 
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "А в эту группу смотреть нельзя");
+                        return [2 /*return*/];
+                    }
+                    result = "Название группы: " + group.groupName + "\nАдминистратор группы: @" + group.adminUsername + "\n\n", i = 1;
+                    if (group.description)
+                        result += "Описание группы: \n" + group.description + "\n\n";
+                    if (group.daily)
+                        result += "Сообщение дня: \n" + group.daily + "\n\n";
+                    result += "Список участников: ";
+                    groupMembers.forEach(function (member) {
+                        result += "\n" + i.toString() + " @" + member.username + " — " + member.role;
+                        i++;
+                    });
+                    ctx.telegram.sendMessage(ctx.message.chat.id, result);
                     return [2 /*return*/];
             }
         });
     });
 }
-exports.addMod = addMod;
-exports.addModDescription = new commandDescription_1.comDesc("/add_mod [group_name] [username]", "добавить модератора в группу", 2, "group_name - группа, в которую вы хотите добавить модератора", "username - ник пользователя (без \"@\"), которого вы хотите добавить в модераторы", "Пример: /add_mod клан_крутые_гремлины vasya");
+exports.groupInfo = groupInfo;
+exports.groupInfoDescription = new commands_1.comDesc("/group_info [group_name]", "выводит информацию о группе", 0, "group_name - название группы, информацию о которой вы хотите получить", "Выводит описание, сообщение дня и участников группы");

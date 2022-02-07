@@ -4,6 +4,7 @@ export async function createNewUser(uid: number, username: string): Promise<void
   await userModel.create({
     uid: uid,
     username: username,
+    groupName: "Community",
     groupID: 3,
     role: "member"
   })

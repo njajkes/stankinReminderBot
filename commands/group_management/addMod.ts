@@ -1,11 +1,12 @@
-import { groupModel } from "../models/groups"
-import { userModel } from "../models/users"
-import { comDesc } from "./commandDescription"
+import { groupModel } from "../../models/groups"
+import { userModel } from "../../models/users"
+import { ARG_LEN_ERR_MESSAGE } from "../../utils/constants"
+import { comDesc } from "../commands"
 
 export async function addMod(ctx): Promise<void> {
   const query: string[] = ctx.message.text.split(' ').slice(1)
   if (query.length != 2) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Введено неверное количество аргументов 🤕\nПожалуйста, проверьте корректность введённых данных\nПодробнее: /help add_mod")
+    ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "add_mod")
     return
   }
   const group = await groupModel.findOne({groupName: query[0], adminID: ctx.from.id})
@@ -15,7 +16,10 @@ export async function addMod(ctx): Promise<void> {
   }
   const user = await userModel.findOne({groupName: query[0], username: query[1]})
   if (!user || user.role == "sended" || user.role == "pending") {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Такого пользователя в вашей группе нет 🤕\nИспользуйте /show_candidates для того, чтобы посмотреть заявки в группу")
+    ctx.telegram.sendMessage(
+      ctx.message.chat.id, 
+      "Такого пользователя в вашей группе нет 🤕\nИспользуйте /show_candidates для того, чтобы посмотреть заявки в группу"
+    )
     return
   }
   if (user.role != "member") {

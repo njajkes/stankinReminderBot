@@ -36,50 +36,54 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.acceptJoinDescription = exports.acceptJoin = void 0;
-var groups_1 = require("../models/groups");
-var users_1 = require("../models/users");
-var commandDescription_1 = require("./commandDescription");
-function acceptJoin(ctx) {
+exports.joinGroupDescription = exports.joinGroup = void 0;
+var groups_1 = require("../../models/groups");
+var users_1 = require("../../models/users");
+var constants_1 = require("../../utils/constants");
+var commands_1 = require("../commands");
+function joinGroup(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var query, group, user;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     query = ctx.message.text.split(' ').slice(1);
-                    if (query.length != 2) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Введено неверное количество аргументов 🤕\nПожалуйста, проверьте корректность введённых данных.\nПодробнее: /help accept_join");
+                    if (query.length != 1) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.ARG_LEN_ERR_MESSAGE + "join_group");
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: query[0], adminID: ctx.from.id })];
+                    return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: query[0] })];
                 case 1:
                     group = _a.sent();
                     if (!group) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такой группы не существует, либо вы не являетесь админом в ней 🤕");
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такой группы не найдено 🤕\nПожалуйста, проверьте корректность введённых данных");
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, users_1.userModel.findOne({ username: query[1], groupName: query[0] })];
+                    return [4 /*yield*/, users_1.userModel.findOne({ uid: ctx.from.id, groupName: query[0] })];
                 case 2:
                     user = _a.sent();
-                    if (!user) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такой пользователь не найден в списке ожидающих 🤕");
+                    if (user) {
+                        if (user.role == "sended" || user.role == "pending") {
+                            ctx.telegram.sendMessage(ctx.message.chat.id, "Вы уже подали заявку в эту группу 🤕");
+                        }
+                        else {
+                            ctx.telegram.sendMessage(ctx.message.chat.id, "Вы уже состоите в этой группе 🤕");
+                        }
                         return [2 /*return*/];
                     }
-                    if (user.role == "sended" || user.role == "pending") {
-                        user.role = "member";
-                    }
-                    else {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Пользователь уже является участником группы 🤕");
-                        return [2 /*return*/];
-                    }
-                    return [4 /*yield*/, user.save()];
+                    return [4 /*yield*/, users_1.userModel.create({
+                            uid: ctx.from.id,
+                            username: ctx.from.username,
+                            groupName: group.groupName,
+                            role: "sended"
+                        })];
                 case 3:
                     _a.sent();
-                    ctx.telegram.sendMessage(ctx.message.chat.id, "\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C @".concat(user.username, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432 \u0433\u0440\u0443\u043F\u043F\u0443!"));
+                    ctx.telegram.sendMessage(ctx.message.chat.id, "Заявка на вступление в группу " + group.groupName + " успешно отправлена!");
                     return [2 /*return*/];
             }
         });
     });
 }
-exports.acceptJoin = acceptJoin;
-exports.acceptJoinDescription = new commandDescription_1.comDesc("/accept_join [group_name] [username]", "принять заявку на вступление в группу", 2, "group_name - название группы одним словом", "username - юзернейм кандидата на вступление (без символа \"@\"", "Пример: /accept_join клан_крутые_гремлины kirito993");
+exports.joinGroup = joinGroup;
+exports.joinGroupDescription = new commands_1.comDesc("/join_group [group_name]", "отправить заявку на вступление в группу", 0, "group_name - название группы одним словом (как написано в /group_list, например: \"клан_крутые_гремлины\" вместо \"клан крутые гремлины\")", "Пример: /join_group клан_крутые_гремлины");

@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.startDescription = exports.start = void 0;
 var users_1 = require("../controllers/users");
-var commandDescription_1 = require("./commandDescription");
+var commands_1 = require("./commands");
 function start(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var user;
@@ -62,4 +62,4 @@ function start(ctx) {
     });
 }
 exports.start = start;
-exports.startDescription = new commandDescription_1.comDesc("/start", "начало работы и приветственное сообщение", 0);
+exports.startDescription = new commands_1.comDesc("/start", "начало работы и приветственное сообщение", 0);

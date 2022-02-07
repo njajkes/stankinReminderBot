@@ -36,60 +36,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var telegraf_1 = require("telegraf");
-var mongoose = require("mongoose");
-var dotenv = require("dotenv");
-var taskTracker_1 = require("./services/taskTracker");
-var bindCommandsOnBot_1 = require("./utils/bindCommandsOnBot");
-var callSendedJoinRequests_1 = require("./services/callSendedJoinRequests");
-var _a = dotenv.config().parsed, TOKEN = _a.TOKEN, MONGO = _a.MONGO;
-function databaseStart() {
+exports.addGroupDescription = exports.addGroup = void 0;
+var groups_1 = require("../../controllers/groups");
+var groups_2 = require("../../models/groups");
+var users_1 = require("../../models/users");
+var constants_1 = require("../../utils/constants");
+var commands_1 = require("../commands");
+function addGroup(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var query, tracked, groupName, gnameCheck;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, mongoose.connect(MONGO)];
+                    query = ctx.update.message.text
+                        .split(' ').slice(1);
+                    if (query.length != 2) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.ARG_LEN_ERR_MESSAGE + "add_group");
+                        return [2 /*return*/];
+                    }
+                    tracked = +query[1];
+                    if (isNaN(tracked)) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.SYNTAX_ERR_MESSAGE + "add_group");
+                        return [2 /*return*/];
+                    }
+                    groupName = query[0];
+                    return [4 /*yield*/, groups_2.groupModel.findOne({ groupName: groupName })];
                 case 1:
-                    _b.sent();
-                    return [3 /*break*/, 3];
+                    gnameCheck = _a.sent();
+                    if (gnameCheck) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "К сожалению, такая группа уже существует 🤕\nПопробуйте использовать другое название!");
+                        return [2 /*return*/];
+                    }
+                    return [4 /*yield*/, (0, groups_1.createGroup)(groupName, !!tracked, ctx.from)];
                 case 2:
-                    _a = _b.sent();
-                    console.error("База данных не запустилась!");
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    _a.sent();
+                    return [4 /*yield*/, users_1.userModel.create({
+                            uid: ctx.from.id,
+                            username: ctx.from.username,
+                            groupName: groupName,
+                            role: "admin"
+                        })];
+                case 3:
+                    _a.sent();
+                    ctx.telegram.sendMessage(ctx.message.chat.id, "Группа была успешно добавлена!\n");
+                    return [2 /*return*/];
             }
         });
     });
 }
-databaseStart();
-var bot = new telegraf_1.Telegraf(TOKEN);
-(0, bindCommandsOnBot_1.bindCommandsOnBot)(bot);
-bot.command('ctx', function (ctx) {
-    console.dir(ctx.from);
-});
-bot.on("message", function (ctx) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Пожалуйста, введите какую-нибудь команду! Я не понимаю по-другому 😖\nСписок всех команд: /help");
-});
-setInterval(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, callSendedJoinRequests_1.callSendedJoinRequests)(bot)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); }, 1800000); // every 30min
-setInterval(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, taskTracker_1.taskTracker)(bot)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); }, 60000); // every 1min
-bot.launch();
+exports.addGroup = addGroup;
+exports.addGroupDescription = new commands_1.comDesc("/add_group [group_name] [tracked]", "добавить группу", 0, "group_name - название группы (1 слово без пробелов)", "tracked - будет ли группа отображаться в общем списке групп (0 или 1)", "Пример: /add_group клан_крутые_гремлины 0");

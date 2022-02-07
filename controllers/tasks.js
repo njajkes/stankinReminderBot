@@ -36,8 +36,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.findPendingTasks = exports.createTask = void 0;
+exports.taskValidation = exports.findPendingTasks = exports.createTask = void 0;
 var tasks_1 = require("../models/tasks");
+var timeValidation_1 = require("../utils/timeValidation");
 function createTask(uid, disc, time, desc) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -74,3 +75,15 @@ function findPendingTasks(time) {
     });
 }
 exports.findPendingTasks = findPendingTasks;
+// query = [DD, MM, YYYY, hh:mm, Discipline, ...Description]
+function taskValidation(query) {
+    var _a;
+    if (query.length < 6)
+        return false;
+    var query_time = query.slice(0, 4);
+    _a = [query_time[1], query_time[0]], query_time[0] = _a[0], query_time[1] = _a[1];
+    if (!(0, timeValidation_1.timeValidation)(query_time))
+        return false;
+    return true;
+}
+exports.taskValidation = taskValidation;

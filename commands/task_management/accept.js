@@ -36,60 +36,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var telegraf_1 = require("telegraf");
-var mongoose = require("mongoose");
-var dotenv = require("dotenv");
-var taskTracker_1 = require("./services/taskTracker");
-var bindCommandsOnBot_1 = require("./utils/bindCommandsOnBot");
-var callSendedJoinRequests_1 = require("./services/callSendedJoinRequests");
-var _a = dotenv.config().parsed, TOKEN = _a.TOKEN, MONGO = _a.MONGO;
-function databaseStart() {
+exports.acceptDescription = exports.accept = void 0;
+var tasks_1 = require("../../models/tasks");
+var constants_1 = require("../../utils/constants");
+var commands_1 = require("../commands");
+function accept(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var query, task;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, mongoose.connect(MONGO)];
+                    query = ctx.message.text.split(" ").slice(1) // task_id
+                    ;
+                    if (query.length != 1) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.ARG_LEN_ERR_MESSAGE + "accept");
+                        return [2 /*return*/];
+                    }
+                    return [4 /*yield*/, tasks_1.taskModel.findOne({ uid: ctx.from.id, _id: query, status: "w8ing4accept" })];
                 case 1:
-                    _b.sent();
-                    return [3 /*break*/, 3];
-                case 2:
-                    _a = _b.sent();
-                    console.error("База данных не запустилась!");
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    task = _a.sent();
+                    if (!task) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, "Задача с таким id, ждущая того, чтобы вы её приняли, не найдена 🤕");
+                        return [2 /*return*/];
+                    }
+                    task.status = "waiting";
+                    task.save();
+                    ctx.telegram.sendMessage(ctx.message.chat.id, "\u0417\u0430\u0434\u0430\u0447\u0430 ".concat(task._id, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0430!"));
+                    return [2 /*return*/];
             }
         });
     });
 }
-databaseStart();
-var bot = new telegraf_1.Telegraf(TOKEN);
-(0, bindCommandsOnBot_1.bindCommandsOnBot)(bot);
-bot.command('ctx', function (ctx) {
-    console.dir(ctx.from);
-});
-bot.on("message", function (ctx) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Пожалуйста, введите какую-нибудь команду! Я не понимаю по-другому 😖\nСписок всех команд: /help");
-});
-setInterval(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, callSendedJoinRequests_1.callSendedJoinRequests)(bot)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); }, 1800000); // every 30min
-setInterval(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, taskTracker_1.taskTracker)(bot)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); }, 60000); // every 1min
-bot.launch();
+exports.accept = accept;
+exports.acceptDescription = new commands_1.comDesc("/accept [task_id]", "принять задачу, которую вам отправили", 0, "task_id - идентификатор задачи", "Пример: /accept 993");

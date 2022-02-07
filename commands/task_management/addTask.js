@@ -36,29 +36,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.groupListDescription = exports.groupsList = void 0;
-var groups_1 = require("../controllers/groups");
-var commandDescription_1 = require("./commandDescription");
-function groupsList(ctx) {
+exports.addTaskDescription = exports.addTask = void 0;
+var tasks_1 = require("../../controllers/tasks");
+var constants_1 = require("../../utils/constants");
+var commands_1 = require("../commands");
+function addTask(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var result, groups, _i, groups_2, k, _id, groupName;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    result = 'Список отображаемых групп:\n';
-                    return [4 /*yield*/, (0, groups_1.getAllVisibleGroups)()];
-                case 1:
-                    groups = _a.sent();
-                    for (_i = 0, groups_2 = groups; _i < groups_2.length; _i++) {
-                        k = groups_2[_i];
-                        _id = k._id, groupName = k.groupName;
-                        result += '\n' + _id + '. ' + groupName + ';';
-                    }
-                    ctx.telegram.sendMessage(ctx.message.chat.id, result);
-                    return [2 /*return*/];
+        var query, time, discipline, description;
+        var _a;
+        return __generator(this, function (_b) {
+            query = ctx.update.message.text
+                .split('/').join(' ')
+                .split('-').join(' ')
+                .split('.').join(' ')
+                .split(' ').slice(2);
+            if (!(0, tasks_1.taskValidation)(query)) {
+                ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.SYNTAX_ERR_MESSAGE + "add_task");
+                return [2 /*return*/];
             }
+            _a = [query[1], query[0]], query[0] = _a[0], query[1] = _a[1];
+            time = (new Date(query.slice(0, 4).join(' '))).getTime();
+            discipline = query[4].split('_').join(' ');
+            description = query.slice(5).join(' ');
+            (0, tasks_1.createTask)(ctx.from.id, discipline, time, description);
+            ctx.telegram.sendMessage(ctx.message.chat.id, "Задача успешно добавлена!");
+            return [2 /*return*/];
         });
     });
 }
-exports.groupsList = groupsList;
-exports.groupListDescription = new commandDescription_1.comDesc("/groups_list", "вывести список всех видимых групп", 0);
+exports.addTask = addTask;
+exports.addTaskDescription = new commands_1.comDesc("/add_task [time] [discipline] [description]", "добавить персональную задачу", 0, "time - время в формате \"DD MM YYYY hh:mm\"", "discipline - содержит предмет, по поводу которого срабатывает напоминание.", "description - содержит описание задачи", "ВАЖНО: При указании предмета, пробелы заменяются нижними подчеркиваниями для успешного парса строки", "Пример: /add_task 01 01 2025 15:55 Математическая_логика_и_теория_алгоритмов Сдать контрольную");

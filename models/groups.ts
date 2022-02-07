@@ -1,5 +1,5 @@
 import { AutoIncrementID } from "@typegoose/auto-increment"
-import {Schema, model} from "mongoose"
+import { Schema, model } from "mongoose"
 
 export interface GroupInfo {
   _id: number,
@@ -7,7 +7,10 @@ export interface GroupInfo {
   tracked: boolean,
   fatherName?: string,
   adminID: number,
-  adminUsername: string
+  adminUsername: string,
+  description?: string,
+  contacts?: string,
+  daily?: string
 }
 
 export const groupSchema = new Schema<GroupInfo>({
@@ -16,7 +19,10 @@ export const groupSchema = new Schema<GroupInfo>({
   tracked: {type: Boolean, required: true},
   fatherName: {type: String},
   adminID: {type: Number, required: true},
-  adminUsername: {type: String, required: true}
+  adminUsername: {type: String, required: true},
+  description: {type: String},
+  contacts: {type: String},
+  daily: {type: String}
 })
 
 groupSchema.plugin(AutoIncrementID, {})

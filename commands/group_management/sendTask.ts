@@ -1,8 +1,9 @@
-import { taskValidation } from "../controllers/tasks";
-import { groupModel } from "../models/groups";
-import { taskModel } from "../models/tasks";
-import { userModel } from "../models/users";
-import { comDesc } from "./commandDescription";
+import { taskValidation } from "../../controllers/tasks";
+import { groupModel } from "../../models/groups";
+import { taskModel } from "../../models/tasks";
+import { userModel } from "../../models/users";
+import { ARG_LEN_ERR_MESSAGE, SYNTAX_ERR_MESSAGE } from "../../utils/constants";
+import { comDesc } from "../commands";
 
 export async function sendTask(ctx): Promise<void> {
   const query = ctx.message.text.split(' ').slice(1)
@@ -11,18 +12,24 @@ export async function sendTask(ctx): Promise<void> {
   const group = await groupModel.findOne({groupName: groupQuery})
   const user = await userModel.findOne({uid: ctx.from.id, groupName: groupQuery, $or: [{role: "moderator"}, {role: "admin"}]})
 
+  if (query.length < 7) {
+    ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "send_task")
+    return
+  }
+  
   if (!group || !user || (user.role !== "moderator" && user.role !== "admin")) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "Группа не найдена либо вы не являетесь в ней модератором или админом 🤕")
     return
   }
 
-  const taskQuery = query.slice(1)
+  const taskQuery: string[] = query.slice(1)
+
   if (!taskValidation(taskQuery)) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Нарушен синтаксис команды 🤕\nПожалуйста, проверьте корректность введённых данных\nПодробнее: /help send_task")
+    ctx.telegram.sendMessage(ctx.message.chat.id, SYNTAX_ERR_MESSAGE + "send_task")
     return
   }
 
-  const time: number = (new Date(taskQuery.slice(0, 4).join(' '))).getTime()
+  const time = (new Date(taskQuery.slice(0, 4).join(' '))).getTime()
   const discipline = taskQuery[4].split('_').join(' ')
   const description = taskQuery.slice(5).join(' ')
 
@@ -36,7 +43,7 @@ export async function sendTask(ctx): Promise<void> {
       status: "w8ing4accept"
     })
     ctx.telegram.sendMessage(member.uid, 
-      `Новая задача от ${group}!\ntask_id: ${task._id}\n\nПредмет: ${discipline}\n\nОписание:${description}\n\nЧтобы принять, введите /accept ${task._id}\nЧтобы отклонить, введите /decline ${task._id}`)
+      `Новая задача от ${group.groupName}!\ntask_id: ${task._id}\n\nПредмет: ${discipline}\n\nОписание: ${description}\n\nЧтобы принять, введите /accept ${task._id}\nЧтобы отклонить, введите /decline ${task._id}`)
   })
   ctx.telegram.sendMessage(ctx.message.chat.id, `Задача успешно разослана всем в группе ${groupQuery}!`)
 }

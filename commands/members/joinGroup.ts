@@ -1,11 +1,12 @@
-import { groupModel } from "../models/groups";
-import { userModel } from "../models/users";
-import { comDesc } from "./commandDescription"
+import { groupModel } from "../../models/groups";
+import { userModel } from "../../models/users";
+import { ARG_LEN_ERR_MESSAGE } from "../../utils/constants";
+import { comDesc } from "../commands"
 
 export async function joinGroup(ctx): Promise<void> {
   const query = ctx.message.text.split(' ').slice(1)
   if (query.length != 1) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Введено неверное количество аргументов 🤕\nПожалуйста, проверьте корректность введённых данных\nПодробнее: /help join_group")
+    ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "join_group")
     return
   } 
   const group = await groupModel.findOne({groupName: query[0]})

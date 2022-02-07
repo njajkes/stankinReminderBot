@@ -9,7 +9,7 @@ import { callSendedJoinRequests } from './services/callSendedJoinRequests'
 const { TOKEN, MONGO } = dotenv.config().parsed
 async function databaseStart() {
   try {
-    mongoose.connect(MONGO)
+    await mongoose.connect(MONGO)
   } catch {
     console.error("База данных не запустилась!")
   }
@@ -27,7 +27,7 @@ bot.on("message", (ctx) => {
 })
 
 setInterval(async () => {
-  await callSendedJoinRequests(bot) // not tested shit
+  await callSendedJoinRequests(bot)
 }, 1800000) // every 30min
 
 setInterval(async () => {

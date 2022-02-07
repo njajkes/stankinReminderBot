@@ -9,7 +9,10 @@ exports.groupSchema = new mongoose_1.Schema({
     tracked: { type: Boolean, required: true },
     fatherName: { type: String },
     adminID: { type: Number, required: true },
-    adminUsername: { type: String, required: true }
+    adminUsername: { type: String, required: true },
+    description: { type: String },
+    contacts: { type: String },
+    daily: { type: String }
 });
 exports.groupSchema.plugin(auto_increment_1.AutoIncrementID, {});
 exports.groupModel = (0, mongoose_1.model)("group", exports.groupSchema);

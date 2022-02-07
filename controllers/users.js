@@ -45,6 +45,7 @@ function createNewUser(uid, username) {
                 case 0: return [4 /*yield*/, users_1.userModel.create({
                         uid: uid,
                         username: username,
+                        groupName: "Community",
                         groupID: 3,
                         role: "member"
                     })];

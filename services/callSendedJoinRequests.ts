@@ -9,17 +9,20 @@ export async function callSendedJoinRequests(bot: Telegraf<Context<Update>>) {
   if (!candidates) { return }
   const admins: object = {}
 
-  candidates.forEach(async (candidate) => {
+  for (let candidate of candidates) {
     const group = await groupModel.findOne({groupName: candidate.groupName})
-    if (!admins[group.adminID] || !admins[group.adminID][group.groupName]) {
+    if (!admins[group.adminID]) {
+      admins[group.adminID] = {}
+    }
+    if (!admins[group.adminID][group.groupName]) {
       admins[group.adminID][group.groupName] = [candidate.username]
     } else {
       admins[group.adminID][group.groupName].push(candidate.username)
     }
     candidate.role = "pending"
     await candidate.save()
-  })
-  
+  }
+
   for (let admin of Object.getOwnPropertyNames(admins)) {
     let msg: string = "Привет! Список жаждущий вступления в ваши группы:"
     const adminGroups = Object.getOwnPropertyNames(admins[admin])
@@ -29,8 +32,9 @@ export async function callSendedJoinRequests(bot: Telegraf<Context<Update>>) {
       let i = 1
       candidates.forEach(candidate => {
         msg += '\n' + i.toString() + '. @' + candidate
+        i++
       })
     })
-    bot.telegram.sendMessage(admin, msg)
+    bot.telegram.sendMessage(+admin, msg)
   }
 }

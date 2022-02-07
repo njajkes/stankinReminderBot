@@ -1,13 +1,12 @@
-import { groupModel } from "../models/groups";
-import { userModel } from "../models/users";
-import { comDesc } from "./commandDescription";
-
-export const showCandidatesDescription = new comDesc("/show_candidates [group_name]", "вывести список всех ожидающих вступления в группу", 2, "group_name - название группы, в которой вы являетесь админом")
+import { groupModel } from "../../models/groups";
+import { userModel } from "../../models/users";
+import { ARG_LEN_ERR_MESSAGE } from "../../utils/constants";
+import { comDesc } from "../commands";
 
 export async function showCandidates (ctx): Promise<void> {
   const query = ctx.message.text.split(' ').slice(1)
   if (query.length != 1) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Введено неверное количество аргументов 🤕\nПожалуйста, проверьте корректность введённых данных.\nПодробнее: /help show_candidates")
+    ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "show_candidates")
     return
   }
   const group = await groupModel.findOne({groupName: query[0], adminID: ctx.from.id})
@@ -21,11 +20,13 @@ export async function showCandidates (ctx): Promise<void> {
     return
   }
   let result = 'Список ожидающих вступления в группу ' + group.groupName + ": ", i = 1
-  users.forEach(async el => {
+  for (let el of users) {
     el.role = "pending"
     await el.save()
     result += "\n" + i.toString() + ". @" + el.username
     i++
-  })
+  }
   ctx.telegram.sendMessage(ctx.message.chat.id, result)
 }
+
+export const showCandidatesDescription = new comDesc("/show_candidates [group_name]", "вывести список всех ожидающих вступления в группу", 2, "group_name - название группы, в которой вы являетесь админом")

@@ -1,18 +1,20 @@
-import { createGroup } from "../controllers/groups";
-import { groupModel } from "../models/groups";
-import { comDesc } from "./commandDescription";
+import { createGroup } from "../../controllers/groups";
+import { groupModel } from "../../models/groups";
+import { userModel } from "../../models/users";
+import { ARG_LEN_ERR_MESSAGE, SYNTAX_ERR_MESSAGE } from "../../utils/constants";
+import { comDesc } from "../commands";
 
 export async function addGroup(ctx): Promise<void> {
   const query: string[] = 
     ctx.update.message.text
     .split(' ').slice(1)
   if (query.length != 2) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Некорректное количество параметров 🤕\nПожалуйта, введите данные по форме. Подробнее: /help add_group")
+    ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "add_group")
     return
   }
   const tracked:number = +query[1]
   if (isNaN(tracked)) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "В качестве последнего параметра введено не число 🤕\nПожалуйта, введите данные по форме. Подробнее: /help add_group")
+    ctx.telegram.sendMessage(ctx.message.chat.id, SYNTAX_ERR_MESSAGE + "add_group")
     return
   }
   const groupName = query[0]
@@ -22,6 +24,12 @@ export async function addGroup(ctx): Promise<void> {
     return
   }
   await createGroup(groupName, !!tracked, ctx.from)
+  await userModel.create({
+    uid: ctx.from.id,
+    username: ctx.from.username,
+    groupName: groupName,
+    role: "admin"
+  })
   ctx.telegram.sendMessage(ctx.message.chat.id, "Группа была успешно добавлена!\n")
 }
 

@@ -1,5 +1,5 @@
-import { taskModel } from "../models/tasks";
-import { comDesc } from "./commandDescription";
+import { taskModel } from "../../models/tasks";
+import { comDesc } from "../commands";
 
 export async function decline(ctx) {
   const query = ctx.message.text.split(" ")[1] // task_id

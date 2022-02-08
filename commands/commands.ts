@@ -12,6 +12,11 @@ import { joinGroup, joinGroupDescription } from './members/joinGroup'
 import { accept, acceptDescription } from './task_management/accept'
 import { decline, declineDescription } from './task_management/decline'
 import { showTasks, showTasksDescription } from './task_management/showTasks'
+import { setInfo, setInfoDescription } from './group_management/description/setInfo'
+import { delInfo, delInfoDescription } from './group_management/description/delInfo'
+import { about, aboutDescription } from './about'
+import { delDaily, delDailyDescription } from './group_management/daily/delDaily'
+import { setDaily, setDailyDescription } from './group_management/daily/setDaily'
 
 class command {
   func: (ctx: any) => Promise<void>
@@ -23,23 +28,10 @@ class command {
   }
 }
 
-export class comDesc {
-  commandName: string
-  commandDescription: string
-  permissions: number
-  args?: string[]
-
-  constructor(commandName: string, commandDescription: string, permissions: number, ...args: string[]) {
-    this.commandName = commandName
-    this.commandDescription = commandDescription
-    this.permissions = permissions
-    this.args = args
-  }
-}
-
 export const commands = [
   new command(start, "start"), // v.0.2.6
   new command(help, "help"), // v.0.2.6
+  new command(about, "about"),
   new command(groupsList, "groups_list"), // v.0.2.6
   new command(addTask, "add_task"), // not tested
   new command(addGroup, "add_group"), // v.0.2.6
@@ -51,12 +43,17 @@ export const commands = [
   new command(decline, "decline"), // not tested
   new command(sendTask, "send_task"), // not tested
   new command(showTasks, "show_tasks"), // v.0.2.6
-  new command(groupInfo, "group_info") // TODO: tests
+  new command(groupInfo, "group_info"), // TODO: tests
+  new command(setInfo, "set_info"),
+  new command(delInfo, "del_info"),
+  new command(setDaily, "set_daily"),
+  new command(delDaily, "del_daily")
 ]
 
 export const commandDescriptions = [
   startDescription,
   helpDescription,
+  aboutDescription,
   groupListDescription,
   addTaskDescription,
   addGroupDescription,
@@ -69,5 +66,9 @@ export const commandDescriptions = [
   declineDescription,
   sendTaskDescription,
   showTasksDescription,
-  groupInfoDescription
+  groupInfoDescription,
+  setInfoDescription,
+  delInfoDescription,
+  setDailyDescription,
+  delDailyDescription
 ]

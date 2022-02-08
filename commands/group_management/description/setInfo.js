@@ -36,44 +36,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.showTasksDescription = exports.showTasks = void 0;
-var tasks_1 = require("../../models/tasks");
-var timeToString_1 = require("../../utils/timeToString");
-var comDesc_1 = require("../comDesc");
-function showTasks(ctx) {
+exports.setInfoDescription = exports.setInfo = void 0;
+var groups_1 = require("../../../models/groups");
+var constants_1 = require("../../../utils/constants");
+var comDesc_1 = require("../../comDesc");
+function setInfo(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var w8ing4acceptTasks, pendingTasks, result;
+        var query, groupName, group, newDescription;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, tasks_1.taskModel.find({ uid: ctx.from.id, status: "w8ing4accept" }).sort({ time: 1 })];
-                case 1:
-                    w8ing4acceptTasks = _a.sent();
-                    return [4 /*yield*/, tasks_1.taskModel.find({ uid: ctx.from.id, $or: [{ status: "pending" }, { status: "waiting" }] }).sort({ time: 1 })];
-                case 2:
-                    pendingTasks = _a.sent();
-                    if (!w8ing4acceptTasks.length && !pendingTasks.length) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Задач, ожидающих выполнения или принятия, не найдено 🤕");
+                case 0:
+                    query = ctx.message.text.split(' ').slice(1);
+                    if (query.length < 2) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.ARG_LEN_ERR_MESSAGE + "set_info");
                         return [2 /*return*/];
                     }
-                    result = "";
-                    if (w8ing4acceptTasks.length) {
-                        result += "Список задач, ожидающих вашего принятия: ";
-                        w8ing4acceptTasks.forEach(function (task) {
-                            result += "\n\nИдентификатор задачи: " + task._id.toString() + '.\nПредмет: ' + task.discipline + '\nОписание: ' + task.description + "\nК какому времени: " + (0, timeToString_1.timeToString)(task.time);
-                        });
-                        result += "\n\n";
+                    groupName = ctx.message.text.split(' ')[1];
+                    return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: groupName, adminID: ctx.from.id })];
+                case 1:
+                    group = _a.sent();
+                    if (!group) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.PERM_ERR_MESSAGE + "set_info");
+                        return [2 /*return*/];
                     }
-                    if (pendingTasks.length) {
-                        result += "Список ваших задач: ";
-                        pendingTasks.forEach(function (task) {
-                            result += "\n\nИдентификатор задачи:" + task._id.toString() + '.\nПредмет: ' + task.discipline + '\nОписание: ' + task.description + "\nК какому времени: " + (0, timeToString_1.timeToString)(task.time);
-                        });
-                    }
-                    ctx.telegram.sendMessage(ctx.message.chat.id, result);
+                    newDescription = query.slice(1).join(' ');
+                    group.description = newDescription;
+                    return [4 /*yield*/, group.save()];
+                case 2:
+                    _a.sent();
+                    ctx.telegram.sendMessage(ctx.message.chat.id, "\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F \u043E \u0433\u0440\u0443\u043F\u043F\u0435 ".concat(groupName, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0430!"));
                     return [2 /*return*/];
             }
         });
     });
 }
-exports.showTasks = showTasks;
-exports.showTasksDescription = new comDesc_1.comDesc("/show_tasks", "посмотреть свои задачи", 0, "Возвращает как задачи, которые вы приняли, так и те, которые ожидают одобрения/отклонения");
+exports.setInfo = setInfo;
+exports.setInfoDescription = new comDesc_1.comDesc("/set_info [group_name] [info]", "устанавливает описание группы", 2, "group_name - группа, информацию о которой вы хотите изменить", "info - описание, которое вы хотите установить", "ВАЖНО: предыдущее описание безвозвратно затрётся");

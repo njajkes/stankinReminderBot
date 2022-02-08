@@ -3,7 +3,7 @@ import { groupModel } from "../../models/groups";
 import { taskModel } from "../../models/tasks";
 import { userModel } from "../../models/users";
 import { ARG_LEN_ERR_MESSAGE, SYNTAX_ERR_MESSAGE } from "../../utils/constants";
-import { comDesc } from "../commands";
+import { comDesc } from '../comDesc'
 
 export async function sendTask(ctx): Promise<void> {
   const query = ctx.message.text.split(' ').slice(1)

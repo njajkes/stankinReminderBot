@@ -39,7 +39,7 @@ exports.__esModule = true;
 exports.acceptDescription = exports.accept = void 0;
 var tasks_1 = require("../../models/tasks");
 var constants_1 = require("../../utils/constants");
-var commands_1 = require("../commands");
+var comDesc_1 = require("../comDesc");
 function accept(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var query, task;
@@ -68,4 +68,4 @@ function accept(ctx) {
     });
 }
 exports.accept = accept;
-exports.acceptDescription = new commands_1.comDesc("/accept [task_id]", "принять задачу, которую вам отправили", 0, "task_id - идентификатор задачи", "Пример: /accept 993");
+exports.acceptDescription = new comDesc_1.comDesc("/accept [task_id]", "принять задачу, которую вам отправили", 0, "task_id - идентификатор задачи", "Пример: /accept 993");

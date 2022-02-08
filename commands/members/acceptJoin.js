@@ -39,7 +39,7 @@ exports.__esModule = true;
 exports.acceptJoinDescription = exports.acceptJoin = void 0;
 var groups_1 = require("../../models/groups");
 var users_1 = require("../../models/users");
-var commands_1 = require("../commands");
+var comDesc_1 = require("../comDesc");
 function acceptJoin(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var query, group, user;
@@ -83,4 +83,4 @@ function acceptJoin(ctx) {
     });
 }
 exports.acceptJoin = acceptJoin;
-exports.acceptJoinDescription = new commands_1.comDesc("/accept_join [group_name] [username]", "принять заявку на вступление в группу", 2, "group_name - название группы одним словом", "username - юзернейм кандидата на вступление (без символа \"@\"", "Пример: /accept_join клан_крутые_гремлины kirito993");
+exports.acceptJoinDescription = new comDesc_1.comDesc("/accept_join [group_name] [username]", "принять заявку на вступление в группу", 2, "group_name - название группы одним словом", "username - юзернейм кандидата на вступление (без символа \"@\"", "Пример: /accept_join клан_крутые_гремлины kirito993");

@@ -40,7 +40,7 @@ exports.addModDescription = exports.addMod = void 0;
 var groups_1 = require("../../models/groups");
 var users_1 = require("../../models/users");
 var constants_1 = require("../../utils/constants");
-var commands_1 = require("../commands");
+var comDesc_1 = require("../comDesc");
 function addMod(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var query, group, user;
@@ -81,4 +81,4 @@ function addMod(ctx) {
     });
 }
 exports.addMod = addMod;
-exports.addModDescription = new commands_1.comDesc("/add_mod [group_name] [username]", "добавить модератора в группу", 2, "group_name - группа, в которую вы хотите добавить модератора", "username - ник пользователя (без \"@\"), которого вы хотите добавить в модераторы", "Пример: /add_mod клан_крутые_гремлины vasya");
+exports.addModDescription = new comDesc_1.comDesc("/add_mod [group_name] [username]", "добавить модератора в группу", 2, "group_name - группа, в которую вы хотите добавить модератора", "username - ник пользователя (без \"@\"), которого вы хотите добавить в модераторы", "Пример: /add_mod клан_крутые_гремлины vasya");

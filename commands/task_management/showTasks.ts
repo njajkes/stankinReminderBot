@@ -1,6 +1,6 @@
 import { taskModel } from "../../models/tasks";
 import { timeToString } from "../../utils/timeToString";
-import { comDesc } from "../commands";
+import { comDesc } from '../comDesc'
 
 export async function showTasks(ctx) {
   const w8ing4acceptTasks = await taskModel.find({uid: ctx.from.id, status: "w8ing4accept"}).sort({time: 1})

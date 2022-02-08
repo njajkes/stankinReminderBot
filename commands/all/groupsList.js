@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.groupListDescription = exports.groupsList = void 0;
 var groups_1 = require("../../controllers/groups");
-var commands_1 = require("../commands");
+var comDesc_1 = require("../comDesc");
 function groupsList(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var result, groups, _i, groups_2, k, _id, groupName;
@@ -61,4 +61,4 @@ function groupsList(ctx) {
     });
 }
 exports.groupsList = groupsList;
-exports.groupListDescription = new commands_1.comDesc("/groups_list", "вывести список всех видимых групп", 0);
+exports.groupListDescription = new comDesc_1.comDesc("/groups_list", "вывести список всех видимых групп", 0);

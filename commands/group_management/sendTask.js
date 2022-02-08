@@ -42,7 +42,7 @@ var groups_1 = require("../../models/groups");
 var tasks_2 = require("../../models/tasks");
 var users_1 = require("../../models/users");
 var constants_1 = require("../../utils/constants");
-var commands_1 = require("../commands");
+var comDesc_1 = require("../comDesc");
 function sendTask(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var query, groupQuery, group, user, taskQuery, time, discipline, description, groupMembers;
@@ -102,4 +102,4 @@ function sendTask(ctx) {
     });
 }
 exports.sendTask = sendTask;
-exports.sendTaskDescription = new commands_1.comDesc("/send_task [group] [time] [description] [discipline]", "отправить задачу участникам группы", 3, "group_name - группа, в которую вы хотите отправить задачу", "time - время в формате \"DD MM YYYY hh:mm\"", "description - содержит описание задачи", "discipline - содержит предмет, по поводу которого срабатывает напоминание. \n    ВАЖНО: При указании предмета, пробелы заменяются нижними подчеркиваниями для успешного парса строки", "Пример: /add_task клан_крутые_гремлины 01 01 2023 15:45 Другое покушать");
+exports.sendTaskDescription = new comDesc_1.comDesc("/send_task [group] [time] [description] [discipline]", "отправить задачу участникам группы", 3, "group_name - группа, в которую вы хотите отправить задачу", "time - время в формате \"DD MM YYYY hh:mm\"", "description - содержит описание задачи", "discipline - содержит предмет, по поводу которого срабатывает напоминание. \n    ВАЖНО: При указании предмета, пробелы заменяются нижними подчеркиваниями для успешного парса строки", "Пример: /add_task клан_крутые_гремлины 01 01 2023 15:45 Другое покушать");

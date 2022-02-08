@@ -40,7 +40,7 @@ exports.groupInfoDescription = exports.groupInfo = void 0;
 var groups_1 = require("../../models/groups");
 var users_1 = require("../../models/users");
 var constants_1 = require("../../utils/constants");
-var commands_1 = require("../commands");
+var comDesc_1 = require("../comDesc");
 function groupInfo(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var query, group, groupMembers, user, result, i;
@@ -90,4 +90,4 @@ function groupInfo(ctx) {
     });
 }
 exports.groupInfo = groupInfo;
-exports.groupInfoDescription = new commands_1.comDesc("/group_info [group_name]", "выводит информацию о группе", 0, "group_name - название группы, информацию о которой вы хотите получить", "Выводит описание, сообщение дня и участников группы");
+exports.groupInfoDescription = new comDesc_1.comDesc("/group_info [group_name]", "выводит информацию о группе", 0, "group_name - название группы, информацию о которой вы хотите получить", "Выводит описание, сообщение дня и участников группы");

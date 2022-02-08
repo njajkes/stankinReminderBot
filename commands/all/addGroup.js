@@ -41,7 +41,7 @@ var groups_1 = require("../../controllers/groups");
 var groups_2 = require("../../models/groups");
 var users_1 = require("../../models/users");
 var constants_1 = require("../../utils/constants");
-var commands_1 = require("../commands");
+var comDesc_1 = require("../comDesc");
 function addGroup(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var query, tracked, groupName, gnameCheck;
@@ -85,4 +85,4 @@ function addGroup(ctx) {
     });
 }
 exports.addGroup = addGroup;
-exports.addGroupDescription = new commands_1.comDesc("/add_group [group_name] [tracked]", "добавить группу", 0, "group_name - название группы (1 слово без пробелов)", "tracked - будет ли группа отображаться в общем списке групп (0 или 1)", "Пример: /add_group клан_крутые_гремлины 0");
+exports.addGroupDescription = new comDesc_1.comDesc("/add_group [group_name] [tracked]", "добавить группу", 0, "group_name - название группы (1 слово без пробелов)", "tracked - будет ли группа отображаться в общем списке групп (0 или 1)", "Пример: /add_group клан_крутые_гремлины 0");

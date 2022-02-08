@@ -1,6 +1,6 @@
 import { groupModel } from "../../models/groups";
 import { userModel } from "../../models/users";
-import { comDesc } from "../commands";
+import { comDesc } from '../comDesc'
 
 export async function acceptJoin(ctx): Promise<void> {
   const query:string[] = ctx.message.text.split(' ').slice(1)

@@ -1,5 +1,5 @@
 import { getAllVisibleGroups } from "../../controllers/groups";
-import { comDesc } from "../commands";
+import { comDesc } from '../comDesc'
 
 export async function groupsList(ctx): Promise<void> {
   let result = 'Список отображаемых групп:\n'

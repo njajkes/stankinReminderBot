@@ -1,6 +1,6 @@
 import { createTask, taskValidation } from "../../controllers/tasks";
 import { SYNTAX_ERR_MESSAGE } from "../../utils/constants";
-import { comDesc } from "../commands";
+import { comDesc } from '../comDesc'
 
 export async function addTask(ctx):Promise<void> {
   const query: string[] = 

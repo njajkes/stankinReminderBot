@@ -40,7 +40,7 @@ exports.joinGroupDescription = exports.joinGroup = void 0;
 var groups_1 = require("../../models/groups");
 var users_1 = require("../../models/users");
 var constants_1 = require("../../utils/constants");
-var commands_1 = require("../commands");
+var comDesc_1 = require("../comDesc");
 function joinGroup(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var query, group, user;
@@ -86,4 +86,4 @@ function joinGroup(ctx) {
     });
 }
 exports.joinGroup = joinGroup;
-exports.joinGroupDescription = new commands_1.comDesc("/join_group [group_name]", "отправить заявку на вступление в группу", 0, "group_name - название группы одним словом (как написано в /group_list, например: \"клан_крутые_гремлины\" вместо \"клан крутые гремлины\")", "Пример: /join_group клан_крутые_гремлины");
+exports.joinGroupDescription = new comDesc_1.comDesc("/join_group [group_name]", "отправить заявку на вступление в группу", 0, "group_name - название группы одним словом (как написано в /group_list, например: \"клан_крутые_гремлины\" вместо \"клан крутые гремлины\")", "Пример: /join_group клан_крутые_гремлины");

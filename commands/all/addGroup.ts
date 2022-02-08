@@ -2,7 +2,7 @@ import { createGroup } from "../../controllers/groups";
 import { groupModel } from "../../models/groups";
 import { userModel } from "../../models/users";
 import { ARG_LEN_ERR_MESSAGE, SYNTAX_ERR_MESSAGE } from "../../utils/constants";
-import { comDesc } from "../commands";
+import { comDesc } from '../comDesc'
 
 export async function addGroup(ctx): Promise<void> {
   const query: string[] = 

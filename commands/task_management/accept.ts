@@ -1,6 +1,6 @@
 import { taskModel } from "../../models/tasks";
 import { ARG_LEN_ERR_MESSAGE } from "../../utils/constants";
-import { comDesc } from "../commands";
+import { comDesc } from '../comDesc'
 
 export async function accept(ctx) {
   const query = ctx.message.text.split(" ").slice(1) // task_id

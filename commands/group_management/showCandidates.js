@@ -40,7 +40,7 @@ exports.showCandidatesDescription = exports.showCandidates = void 0;
 var groups_1 = require("../../models/groups");
 var users_1 = require("../../models/users");
 var constants_1 = require("../../utils/constants");
-var commands_1 = require("../commands");
+var comDesc_1 = require("../comDesc");
 function showCandidates(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var query, group, users, result, i, _i, users_2, el;
@@ -90,4 +90,4 @@ function showCandidates(ctx) {
     });
 }
 exports.showCandidates = showCandidates;
-exports.showCandidatesDescription = new commands_1.comDesc("/show_candidates [group_name]", "вывести список всех ожидающих вступления в группу", 2, "group_name - название группы, в которой вы являетесь админом");
+exports.showCandidatesDescription = new comDesc_1.comDesc("/show_candidates [group_name]", "вывести список всех ожидающих вступления в группу", 2, "group_name - название группы, в которой вы являетесь админом");

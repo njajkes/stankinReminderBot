@@ -37,9 +37,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.help = exports.helpFlagsDescription = exports.helpDescription = void 0;
+var comDesc_1 = require("./comDesc");
 var commands_1 = require("./commands");
-exports.helpDescription = new commands_1.comDesc("/help [flag/command]", "все команды и их синтаксис", 0, "flag - необязательный атрибут, подробнее: /help -h", "command - необязательный атрибут, ");
-exports.helpFlagsDescription = new commands_1.comDesc("/help [flag]", "все команды и их синтаксис", 1, "flag - необязательный атрибут, устанавливает флаг, по которому будут выводиться команды", "Если флаг не был установлен, выводятся команды, доступные всем пользователям", "-h - выводит все флаги :)", "-adm - выводит команды админа группы", "-mod - выводит команды модератора группы");
+exports.helpDescription = new comDesc_1.comDesc("/help [flag/command]", "все команды и их синтаксис", 0, "flag - необязательный атрибут, подробнее: /help -h", "command - необязательный атрибут, ");
+exports.helpFlagsDescription = new comDesc_1.comDesc("/help [flag]", "все команды и их синтаксис", 1, "flag - необязательный атрибут, устанавливает флаг, по которому будут выводиться команды", "Если флаг не был установлен, выводятся команды, доступные всем пользователям", "-h - выводит все флаги :)", "-adm - выводит команды админа группы", "-mod - выводит команды модератора группы");
 function help(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var descriptions, perm, result, query, com;

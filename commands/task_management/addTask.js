@@ -39,7 +39,7 @@ exports.__esModule = true;
 exports.addTaskDescription = exports.addTask = void 0;
 var tasks_1 = require("../../controllers/tasks");
 var constants_1 = require("../../utils/constants");
-var commands_1 = require("../commands");
+var comDesc_1 = require("../comDesc");
 function addTask(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var query, time, discipline, description;
@@ -65,4 +65,4 @@ function addTask(ctx) {
     });
 }
 exports.addTask = addTask;
-exports.addTaskDescription = new commands_1.comDesc("/add_task [time] [discipline] [description]", "добавить персональную задачу", 0, "time - время в формате \"DD MM YYYY hh:mm\"", "discipline - содержит предмет, по поводу которого срабатывает напоминание.", "description - содержит описание задачи", "ВАЖНО: При указании предмета, пробелы заменяются нижними подчеркиваниями для успешного парса строки", "Пример: /add_task 01 01 2025 15:55 Математическая_логика_и_теория_алгоритмов Сдать контрольную");
+exports.addTaskDescription = new comDesc_1.comDesc("/add_task [time] [discipline] [description]", "добавить персональную задачу", 0, "time - время в формате \"DD MM YYYY hh:mm\"", "discipline - содержит предмет, по поводу которого срабатывает напоминание.", "description - содержит описание задачи", "ВАЖНО: При указании предмета, пробелы заменяются нижними подчеркиваниями для успешного парса строки", "Пример: /add_task 01 01 2025 15:55 Математическая_логика_и_теория_алгоритмов Сдать контрольную");

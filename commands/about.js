@@ -36,31 +36,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.declineDescription = exports.decline = void 0;
-var tasks_1 = require("../../models/tasks");
-var comDesc_1 = require("../comDesc");
-function decline(ctx) {
+exports.aboutDescription = exports.about = void 0;
+var comDesc_1 = require("./comDesc");
+function about(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var query, task;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    query = ctx.message.text.split(" ")[1] // task_id
-                    ;
-                    return [4 /*yield*/, tasks_1.taskModel.findOne({ uid: ctx.from.id, _id: query, status: "w8ing4accept" })];
-                case 1:
-                    task = _a.sent();
-                    if (!task) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Задача с таким id, ждущая того, чтобы вы её отклонили, не найдена 🤕");
-                        return [2 /*return*/];
-                    }
-                    task.status = "decline";
-                    task.save();
-                    ctx.telegram.sendMessage(ctx.message.chat.id, "\u0417\u0430\u0434\u0430\u0447\u0430 ".concat(task._id, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u043A\u043B\u043E\u043D\u0435\u043D\u0430!"));
-                    return [2 /*return*/];
-            }
+            ctx.telegram.sendMessage(ctx.message.chat.id, "Название бота: Stankin Reminder\nПрямая ссылка: https://t.me/StankinRemindersBot?start\nВерсия бота: 0.2.6\nСоздатель бота: @najkes\n\nОтдельная благодарность Николаю Верещагину за предоставление возможности сделать расписание");
+            return [2 /*return*/];
         });
     });
 }
-exports.decline = decline;
-exports.declineDescription = new comDesc_1.comDesc("/decline [task_id]", "отклонить задачу, которую вам отправили", 0, "task_id - идентификатор задачи", "Пример: /decline 993");
+exports.about = about;
+exports.aboutDescription = new comDesc_1.comDesc("/about", "обратная связь и информация о боте", 0);

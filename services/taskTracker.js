@@ -40,26 +40,34 @@ exports.taskTracker = void 0;
 var tasks_1 = require("../controllers/tasks");
 function taskTracker(bot) {
     return __awaiter(this, void 0, void 0, function () {
-        var tasks;
-        var _this = this;
+        var tasks, i, _i, tasks_2, task;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, (0, tasks_1.findPendingTasks)(Date.now())];
                 case 1:
                     tasks = _a.sent();
-                    tasks.forEach(function (task) { return __awaiter(_this, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    bot.telegram.sendMessage(task.uid, "\u041F\u0440\u0435\u0434\u043C\u0435\u0442: ".concat(task.discipline, "\n\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: ").concat(task.description));
-                                    task.status = 'pending';
-                                    return [4 /*yield*/, task.save()];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); });
+                    i = 0;
+                    _i = 0, tasks_2 = tasks;
+                    _a.label = 2;
+                case 2:
+                    if (!(_i < tasks_2.length)) return [3 /*break*/, 6];
+                    task = tasks_2[_i];
+                    bot.telegram.sendMessage(task.uid, "\u041F\u0440\u0435\u0434\u043C\u0435\u0442: ".concat(task.discipline, "\n\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: ").concat(task.description));
+                    task.status = 'pending';
+                    return [4 /*yield*/, task.save()];
+                case 3:
+                    _a.sent();
+                    if (!(i++ >= 30)) return [3 /*break*/, 5];
+                    return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 1200); })];
+                case 4:
+                    _a.sent();
+                    i = 0;
+                    _a.label = 5;
+                case 5:
+                    _i++;
+                    return [3 /*break*/, 2];
+                case 6:
+                    ;
                     return [2 /*return*/];
             }
         });

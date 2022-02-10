@@ -42,7 +42,7 @@ var users_1 = require("../models/users");
 // regular notifications for group admins about new join requests  
 function callSendedJoinRequests(bot) {
     return __awaiter(this, void 0, void 0, function () {
-        var candidates, admins, _i, candidates_1, candidate, group, _loop_1, _a, _b, admin;
+        var candidates, admins, _i, candidates_1, candidate, group, i, _loop_1, _a, _b, admin;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0: return [4 /*yield*/, users_1.userModel.find({ role: "sended" })];
@@ -78,25 +78,47 @@ function callSendedJoinRequests(bot) {
                     _i++;
                     return [3 /*break*/, 2];
                 case 6:
+                    i = 0;
                     _loop_1 = function (admin) {
-                        var msg = "Привет! Список жаждущий вступления в ваши группы:";
-                        var adminGroups = Object.getOwnPropertyNames(admins[admin]);
-                        adminGroups.forEach(function (group) {
-                            msg += '\n\n' + group + ':';
-                            var candidates = admins[admin][group];
-                            var i = 1;
-                            candidates.forEach(function (candidate) {
-                                msg += '\n' + i.toString() + '. @' + candidate;
-                                i++;
-                            });
+                        var msg, adminGroups;
+                        return __generator(this, function (_d) {
+                            switch (_d.label) {
+                                case 0:
+                                    msg = "Привет! Список жаждущий вступления в ваши группы:";
+                                    adminGroups = Object.getOwnPropertyNames(admins[admin]);
+                                    adminGroups.forEach(function (group) {
+                                        msg += '\n\n' + group + ':';
+                                        var candidates = admins[admin][group];
+                                        var i = 1;
+                                        candidates.forEach(function (candidate) {
+                                            msg += '\n' + i.toString() + '. @' + candidate;
+                                            i++;
+                                        });
+                                    });
+                                    bot.telegram.sendMessage(+admin, msg);
+                                    if (!(i++ >= 30)) return [3 /*break*/, 2];
+                                    return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 1200); })];
+                                case 1:
+                                    _d.sent();
+                                    i = 0;
+                                    _d.label = 2;
+                                case 2: return [2 /*return*/];
+                            }
                         });
-                        bot.telegram.sendMessage(+admin, msg);
                     };
-                    for (_a = 0, _b = Object.getOwnPropertyNames(admins); _a < _b.length; _a++) {
-                        admin = _b[_a];
-                        _loop_1(admin);
-                    }
-                    return [2 /*return*/];
+                    _a = 0, _b = Object.getOwnPropertyNames(admins);
+                    _c.label = 7;
+                case 7:
+                    if (!(_a < _b.length)) return [3 /*break*/, 10];
+                    admin = _b[_a];
+                    return [5 /*yield**/, _loop_1(admin)];
+                case 8:
+                    _c.sent();
+                    _c.label = 9;
+                case 9:
+                    _a++;
+                    return [3 /*break*/, 7];
+                case 10: return [2 /*return*/];
             }
         });
     });

@@ -1,4 +1,9 @@
 "use strict";
+/**
+ * Validation uses in creating or editing task
+ * @param time Array of string like ["DD", "MM", "YYYY", "hh:mm"]
+ * @returns true if valid or false if invalid
+ */
 exports.__esModule = true;
 exports.timeValidation = void 0;
 function timeValidation(time) {

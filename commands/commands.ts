@@ -17,6 +17,11 @@ import { delInfo, delInfoDescription } from './group_management/description/delI
 import { about, aboutDescription } from './about'
 import { delDaily, delDailyDescription } from './group_management/daily/delDaily'
 import { setDaily, setDailyDescription } from './group_management/daily/setDaily'
+import { ban, banDescription } from './group_management/ban'
+import { kick, kickDescription } from './group_management/kick'
+import { unban, unbanDescription } from './group_management/unban'
+import { declineJoin, declineJoinDescription } from './members/declineJoin'
+import { sendAll, sendAllDescription } from './group_management/sendAll'
 
 class command {
   func: (ctx: any) => Promise<void>
@@ -37,6 +42,7 @@ export const commands = [
   new command(addGroup, "add_group"), // v.0.2.6
   new command(joinGroup, "join_group"), // not tested
   new command(acceptJoin, "accept_join"), // not tested
+  new command(declineJoin, "decline_join"),
   new command(showCandidates, "show_candidates"), // v.0.2.6
   new command(addMod, "add_mod"), // not tested
   new command(accept, "accept"), // not tested
@@ -47,7 +53,11 @@ export const commands = [
   new command(setInfo, "set_info"),
   new command(delInfo, "del_info"),
   new command(setDaily, "set_daily"),
-  new command(delDaily, "del_daily")
+  new command(delDaily, "del_daily"),
+  new command(sendAll, "send_all"),
+  new command(ban, "ban"),
+  new command(unban, "unban"),
+  new command(kick, "kick")
 ]
 
 export const commandDescriptions = [
@@ -60,6 +70,7 @@ export const commandDescriptions = [
   helpFlagsDescription,
   joinGroupDescription,
   acceptJoinDescription,
+  declineJoinDescription,
   showCandidatesDescription,
   addModDescription,
   acceptDescription,
@@ -70,5 +81,9 @@ export const commandDescriptions = [
   setInfoDescription,
   delInfoDescription,
   setDailyDescription,
-  delDailyDescription
+  delDailyDescription,
+  sendAllDescription,
+  banDescription,
+  unbanDescription,
+  kickDescription
 ]

@@ -45,13 +45,12 @@ var constants_1 = require("../../utils/constants");
 var comDesc_1 = require("../comDesc");
 function sendTask(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var query, groupQuery, group, user, taskQuery, time, discipline, description, groupMembers;
-        var _this = this;
+        var query, groupQuery, taskQuery, group, user, time, discipline, description, groupMembers, i, _i, groupMembers_1, member, task;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     query = ctx.message.text.split(' ').slice(1);
-                    groupQuery = query[0];
+                    groupQuery = query[0], taskQuery = query.slice(1);
                     return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: groupQuery })];
                 case 1:
                     group = _a.sent();
@@ -66,7 +65,6 @@ function sendTask(ctx) {
                         ctx.telegram.sendMessage(ctx.message.chat.id, "Группа не найдена либо вы не являетесь в ней модератором или админом 🤕");
                         return [2 /*return*/];
                     }
-                    taskQuery = query.slice(1);
                     if (!(0, tasks_1.taskValidation)(taskQuery)) {
                         ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.SYNTAX_ERR_MESSAGE + "send_task");
                         return [2 /*return*/];
@@ -74,27 +72,35 @@ function sendTask(ctx) {
                     time = (new Date(taskQuery.slice(0, 4).join(' '))).getTime();
                     discipline = taskQuery[4].split('_').join(' ');
                     description = taskQuery.slice(5).join(' ');
-                    return [4 /*yield*/, users_1.userModel.find({ groupName: groupQuery, $or: [{ role: "member" }, { role: "moderator" }, { role: "admin" }] })];
+                    return [4 /*yield*/, users_1.userModel.find({ groupName: groupQuery, role: constants_1.ALLOWED_ROLES })];
                 case 3:
                     groupMembers = _a.sent();
-                    groupMembers.forEach(function (member) { return __awaiter(_this, void 0, void 0, function () {
-                        var task;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, tasks_2.taskModel.create({
-                                        uid: member.uid,
-                                        description: description,
-                                        discipline: discipline,
-                                        time: time,
-                                        status: "w8ing4accept"
-                                    })];
-                                case 1:
-                                    task = _a.sent();
-                                    ctx.telegram.sendMessage(member.uid, "\u041D\u043E\u0432\u0430\u044F \u0437\u0430\u0434\u0430\u0447\u0430 \u043E\u0442 ".concat(group.groupName, "!\ntask_id: ").concat(task._id, "\n\n\u041F\u0440\u0435\u0434\u043C\u0435\u0442: ").concat(discipline, "\n\n\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: ").concat(description, "\n\n\u0427\u0442\u043E\u0431\u044B \u043F\u0440\u0438\u043D\u044F\u0442\u044C, \u0432\u0432\u0435\u0434\u0438\u0442\u0435 /accept ").concat(task._id, "\n\u0427\u0442\u043E\u0431\u044B \u043E\u0442\u043A\u043B\u043E\u043D\u0438\u0442\u044C, \u0432\u0432\u0435\u0434\u0438\u0442\u0435 /decline ").concat(task._id));
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); });
+                    i = 0;
+                    _i = 0, groupMembers_1 = groupMembers;
+                    _a.label = 4;
+                case 4:
+                    if (!(_i < groupMembers_1.length)) return [3 /*break*/, 8];
+                    member = groupMembers_1[_i];
+                    return [4 /*yield*/, tasks_2.taskModel.create({
+                            uid: member.uid,
+                            description: description,
+                            discipline: discipline,
+                            time: time,
+                            status: "w8ing4accept"
+                        })];
+                case 5:
+                    task = _a.sent();
+                    ctx.telegram.sendMessage(member.uid, "\u041D\u043E\u0432\u0430\u044F \u0437\u0430\u0434\u0430\u0447\u0430 \u043E\u0442 ".concat(group.groupName, "!\ntask_id: ").concat(task._id, "\n\n\u041F\u0440\u0435\u0434\u043C\u0435\u0442: ").concat(discipline, "\n\n\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: ").concat(description, "\n\n\u0427\u0442\u043E\u0431\u044B \u043F\u0440\u0438\u043D\u044F\u0442\u044C, \u0432\u0432\u0435\u0434\u0438\u0442\u0435 /accept ").concat(task._id, "\n\u0427\u0442\u043E\u0431\u044B \u043E\u0442\u043A\u043B\u043E\u043D\u0438\u0442\u044C, \u0432\u0432\u0435\u0434\u0438\u0442\u0435 /decline ").concat(task._id));
+                    if (!(i++ >= 30)) return [3 /*break*/, 7];
+                    return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 1200); })];
+                case 6:
+                    _a.sent();
+                    i = 0;
+                    _a.label = 7;
+                case 7:
+                    _i++;
+                    return [3 /*break*/, 4];
+                case 8:
                     ctx.telegram.sendMessage(ctx.message.chat.id, "\u0417\u0430\u0434\u0430\u0447\u0430 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0440\u0430\u0437\u043E\u0441\u043B\u0430\u043D\u0430 \u0432\u0441\u0435\u043C \u0432 \u0433\u0440\u0443\u043F\u043F\u0435 ".concat(groupQuery, "!"));
                     return [2 /*return*/];
             }

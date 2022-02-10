@@ -39,6 +39,7 @@ exports.__esModule = true;
 exports.acceptJoinDescription = exports.acceptJoin = void 0;
 var groups_1 = require("../../models/groups");
 var users_1 = require("../../models/users");
+var constants_1 = require("../../utils/constants");
 var comDesc_1 = require("../comDesc");
 function acceptJoin(ctx) {
     return __awaiter(this, void 0, void 0, function () {
@@ -48,30 +49,24 @@ function acceptJoin(ctx) {
                 case 0:
                     query = ctx.message.text.split(' ').slice(1);
                     if (query.length != 2) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Введено неверное количество аргументов 🤕\nПожалуйста, проверьте корректность введённых данных.\nПодробнее: /help accept_join");
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.ARG_LEN_ERR_MESSAGE + "accept_join");
                         return [2 /*return*/];
                     }
                     return [4 /*yield*/, groups_1.groupModel.findOne({ groupName: query[0], adminID: ctx.from.id })];
                 case 1:
                     group = _a.sent();
                     if (!group) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такой группы не существует, либо вы не являетесь админом в ней 🤕");
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.PERM_ERR_MESSAGE + "accept_join");
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, users_1.userModel.findOne({ username: query[1], groupName: query[0] })];
+                    return [4 /*yield*/, users_1.userModel.findOne({ username: query[1], groupName: query[0], role: ["sended", "pending"] })];
                 case 2:
                     user = _a.sent();
                     if (!user) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такой пользователь не найден в списке ожидающих 🤕");
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.USER_NOT_FOUND_ERR_MESSAGE + "accept_join");
                         return [2 /*return*/];
                     }
-                    if (user.role == "sended" || user.role == "pending") {
-                        user.role = "member";
-                    }
-                    else {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Пользователь уже является участником группы 🤕");
-                        return [2 /*return*/];
-                    }
+                    user.role = "member";
                     return [4 /*yield*/, user.save()];
                 case 3:
                     _a.sent();

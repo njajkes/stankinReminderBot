@@ -1,30 +1,30 @@
 import { groupModel } from "../../models/groups";
 import { userModel } from "../../models/users";
+import { ARG_LEN_ERR_MESSAGE, PERM_ERR_MESSAGE, USER_NOT_FOUND_ERR_MESSAGE } from "../../utils/constants";
 import { comDesc } from '../comDesc'
 
 export async function acceptJoin(ctx): Promise<void> {
   const query:string[] = ctx.message.text.split(' ').slice(1)
   if (query.length != 2) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Введено неверное количество аргументов 🤕\nПожалуйста, проверьте корректность введённых данных.\nПодробнее: /help accept_join")
+    ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "accept_join")
     return
   }
+
   const group = await groupModel.findOne({groupName: query[0], adminID: ctx.from.id})
   if (!group) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Такой группы не существует, либо вы не являетесь админом в ней 🤕")
+    ctx.telegram.sendMessage(ctx.message.chat.id, PERM_ERR_MESSAGE + "accept_join")
     return
   }
-  const user = await userModel.findOne({username: query[1], groupName: query[0]})
+
+  const user = await userModel.findOne({username: query[1], groupName: query[0], role: ["sended", "pending"]})
   if (!user) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Такой пользователь не найден в списке ожидающих 🤕")
+    ctx.telegram.sendMessage(ctx.message.chat.id, USER_NOT_FOUND_ERR_MESSAGE + "accept_join")
     return
   }
-  if (user.role == "sended" || user.role == "pending") {
-    user.role = "member"
-  } else {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Пользователь уже является участником группы 🤕")
-    return
-  }
+
+  user.role = "member"
   await user.save()
+  
   ctx.telegram.sendMessage(ctx.message.chat.id, `Пользователь @${user.username} успешно добавлен в группу!`)
   ctx.telegram.sendMessage(user.uid, `Вас успешно приняли в группу ${user.groupName}!`)
 }

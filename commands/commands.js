@@ -20,6 +20,11 @@ var delInfo_1 = require("./group_management/description/delInfo");
 var about_1 = require("./about");
 var delDaily_1 = require("./group_management/daily/delDaily");
 var setDaily_1 = require("./group_management/daily/setDaily");
+var ban_1 = require("./group_management/ban");
+var kick_1 = require("./group_management/kick");
+var unban_1 = require("./group_management/unban");
+var declineJoin_1 = require("./members/declineJoin");
+var sendAll_1 = require("./group_management/sendAll");
 var command = /** @class */ (function () {
     function command(func, name) {
         this.func = func,
@@ -36,6 +41,7 @@ exports.commands = [
     new command(addGroup_1.addGroup, "add_group"),
     new command(joinGroup_1.joinGroup, "join_group"),
     new command(acceptJoin_1.acceptJoin, "accept_join"),
+    new command(declineJoin_1.declineJoin, "decline_join"),
     new command(showCandidates_1.showCandidates, "show_candidates"),
     new command(addMod_1.addMod, "add_mod"),
     new command(accept_1.accept, "accept"),
@@ -46,7 +52,11 @@ exports.commands = [
     new command(setInfo_1.setInfo, "set_info"),
     new command(delInfo_1.delInfo, "del_info"),
     new command(setDaily_1.setDaily, "set_daily"),
-    new command(delDaily_1.delDaily, "del_daily")
+    new command(delDaily_1.delDaily, "del_daily"),
+    new command(sendAll_1.sendAll, "send_all"),
+    new command(ban_1.ban, "ban"),
+    new command(unban_1.unban, "unban"),
+    new command(kick_1.kick, "kick")
 ];
 exports.commandDescriptions = [
     start_1.startDescription,
@@ -58,6 +68,7 @@ exports.commandDescriptions = [
     help_1.helpFlagsDescription,
     joinGroup_1.joinGroupDescription,
     acceptJoin_1.acceptJoinDescription,
+    declineJoin_1.declineJoinDescription,
     showCandidates_1.showCandidatesDescription,
     addMod_1.addModDescription,
     accept_1.acceptDescription,
@@ -68,5 +79,9 @@ exports.commandDescriptions = [
     setInfo_1.setInfoDescription,
     delInfo_1.delInfoDescription,
     setDaily_1.setDailyDescription,
-    delDaily_1.delDailyDescription
+    delDaily_1.delDailyDescription,
+    sendAll_1.sendAllDescription,
+    ban_1.banDescription,
+    unban_1.unbanDescription,
+    kick_1.kickDescription
 ];

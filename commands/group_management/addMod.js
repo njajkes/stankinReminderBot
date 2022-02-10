@@ -56,24 +56,21 @@ function addMod(ctx) {
                 case 1:
                     group = _a.sent();
                     if (!group) {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Не найдено такой группы, либо вы в ней не админ 🤕");
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.PERM_ERR_MESSAGE + "add_mod");
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, users_1.userModel.findOne({ groupName: query[0], username: query[1] })];
+                    return [4 /*yield*/, users_1.userModel.findOne({ groupName: query[0], username: query[1], role: "member" })];
                 case 2:
                     user = _a.sent();
-                    if (!user || user.role == "sended" || user.role == "pending") {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Такого пользователя в вашей группе нет 🤕\nИспользуйте /show_candidates для того, чтобы посмотреть заявки в группу");
-                        return [2 /*return*/];
-                    }
-                    if (user.role != "member") {
-                        ctx.telegram.sendMessage(ctx.message.chat.id, "Этот пользователь уже является модератором, либо админом 🤕");
+                    if (!user) {
+                        ctx.telegram.sendMessage(ctx.message.chat.id, constants_1.USER_NOT_FOUND_ERR_MESSAGE + "add_mod");
                         return [2 /*return*/];
                     }
                     user.role = "moderator";
                     return [4 /*yield*/, user.save()];
                 case 3:
                     _a.sent();
+                    ctx.telegram.sendMessage(user.uid, "Вы были добавлены в модераторы в группе " + group.groupName + "!\nДля просмотра команд, доступных для модераторов, введите /help -mod");
                     ctx.telegram.sendMessage(ctx.message.chat.id, "Пользователь успешно добавлен в модераторы!");
                     return [2 /*return*/];
             }

@@ -2,9 +2,10 @@ import {Telegraf} from 'telegraf'
 import * as mongoose from 'mongoose'
 import * as dotenv from 'dotenv'
 
-import { taskTracker } from "./services/taskTracker"
-import { bindCommandsOnBot } from './utils/bindCommandsOnBot'
-import { callSendedJoinRequests } from './services/callSendedJoinRequests'
+import taskTracker from "./services/taskTracker"
+import bindCommandsOnBot from './utils/bindCommandsOnBot'
+import callSendedJoinRequests from './services/callSendedJoinRequests'
+import scheduleTracker from './services/scheduleTracker'
 
 const { TOKEN, MONGO } = dotenv.config().parsed
 async function databaseStart() {
@@ -29,6 +30,14 @@ bot.on("message", (ctx) => {
 setInterval(async () => {
   await callSendedJoinRequests(bot)
 }, 1800000) // every 30min
+
+setInterval(async () => {
+  const hourNow = (new Date(Date.now())).getHours()
+  if (hourNow == 18 || hourNow == 6) {
+    await new Promise(resolve => setTimeout(resolve, 1200))
+    await scheduleTracker(bot)
+  }
+}, 3600000) // every 1hour
 
 setInterval(async () => {
   await taskTracker(bot)

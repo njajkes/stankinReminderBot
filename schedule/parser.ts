@@ -1,5 +1,6 @@
 import * as fs from "fs/promises"
 import * as path from "path"
+import dateStringify from "../utils/dateStringify"
 
 interface DisciplineSchedule {
   title: string,
@@ -75,8 +76,4 @@ function datesConverter( dates: [ { frequency: string, date: string } ] ): strin
     }
   }
   return result 
-}
-
-function dateStringify(date: Date): string {
-  return `${date.getFullYear()} ${date.getMonth() + 1} ${date.getDate()}`
 }

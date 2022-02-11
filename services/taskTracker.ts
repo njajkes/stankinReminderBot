@@ -2,7 +2,7 @@ import { Context, Telegraf } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 import { findPendingTasks } from "../controllers/tasks";
 
-export async function taskTracker(bot: Telegraf<Context<Update>>) {
+export default async function taskTracker(bot: Telegraf<Context<Update>>) {
   const tasks = await findPendingTasks(Date.now());
   let i = 0
   for (let task of tasks) {

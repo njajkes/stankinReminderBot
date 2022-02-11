@@ -4,7 +4,7 @@ import { groupModel } from "../models/groups";
 import { userModel } from "../models/users";
 
 // regular notifications for group admins about new join requests  
-export async function callSendedJoinRequests(bot: Telegraf<Context<Update>>) {
+export default async function callSendedJoinRequests(bot: Telegraf<Context<Update>>) {
   const candidates = await userModel.find({role: "sended"})
   if (!candidates) { return }
   const admins: object = {}

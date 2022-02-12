@@ -11,7 +11,7 @@ export async function sendTask(ctx): Promise<void> {
   const [groupQuery, ...taskQuery] = query
   
   const group = await groupModel.findOne({groupName: groupQuery})
-  const user = await userModel.findOne({uid: ctx.from.id, groupName: groupQuery, $or: [{role: "moderator"}, {role: "admin"}]})
+  const user = await userModel.findOne({uid: ctx.from.id, groupName: groupQuery, role: ["moderator", "admin"]})
 
   if (query.length < 7) {
     ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "send_task")

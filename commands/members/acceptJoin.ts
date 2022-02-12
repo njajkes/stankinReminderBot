@@ -1,6 +1,7 @@
 import { groupModel } from "../../models/groups";
 import { userModel } from "../../models/users";
 import { ARG_LEN_ERR_MESSAGE, PERM_ERR_MESSAGE, USER_NOT_FOUND_ERR_MESSAGE } from "../../utils/constants";
+import { getStankinGroups } from "../../utils/getStankinGroups";
 import { comDesc } from '../comDesc'
 
 export async function acceptJoin(ctx): Promise<void> {
@@ -9,18 +10,23 @@ export async function acceptJoin(ctx): Promise<void> {
     ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "accept_join")
     return
   }
+  const [groupName, username] = query
 
-  const group = await groupModel.findOne({groupName: query[0], adminID: ctx.from.id})
+  const group = await groupModel.findOne({groupName: groupName, adminID: ctx.from.id})
   if (!group) {
     ctx.telegram.sendMessage(ctx.message.chat.id, PERM_ERR_MESSAGE + "accept_join")
     return
   }
 
-  const user = await userModel.findOne({username: query[1], groupName: query[0], role: ["sended", "pending"]})
+  const user = await userModel.findOne({username: username, groupName: groupName, role: ["sended", "pending"]})
   if (!user) {
     ctx.telegram.sendMessage(ctx.message.chat.id, USER_NOT_FOUND_ERR_MESSAGE + "accept_join")
     return
   }
+
+  const stGroups = await getStankinGroups()
+  
+  if (stGroups.includes(groupName)) user.subscribe = true
 
   user.role = "member"
   await user.save()

@@ -5,13 +5,14 @@ import { comDesc } from '../../comDesc'
 export async function delInfo(ctx) {
   const query: string[] = ctx.message.text.split(' ').slice(1)
 
-  if (query.length < 1) {
+  if (query.length != 1) {
     ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "del_info")
     return
   }
 
-  const groupName: string = ctx.message.text.split(' ')[1]
-  const group = await groupModel.findOne({groupName: groupName, adminID: ctx.from.id})
+  const [groupName] = query
+  
+  const group = await groupModel.findOne({groupName, adminID: ctx.from.id})
 
   if (!group) {
     ctx.telegram.sendMessage(ctx.message.chat.id, PERM_ERR_MESSAGE + "del_info")

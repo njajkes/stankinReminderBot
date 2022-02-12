@@ -27,7 +27,8 @@ export async function joinGroup(ctx): Promise<void> {
     uid: ctx.from.id,
     username: ctx.from.username,
     groupName: group.groupName,
-    role: "sended"
+    role: "sended",
+    subscribe: false
   })
   ctx.telegram.sendMessage(ctx.message.chat.id, "Заявка на вступление в группу " + group.groupName + " успешно отправлена!")
 }

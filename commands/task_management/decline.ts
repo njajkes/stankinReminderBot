@@ -2,8 +2,9 @@ import { taskModel } from "../../models/tasks";
 import { comDesc } from '../comDesc'
 
 export async function decline(ctx) {
-  const query = ctx.message.text.split(" ")[1] // task_id
-  const task = await taskModel.findOne({uid: ctx.from.id, _id: query, status: "w8ing4accept"})
+  const query = ctx.message.text.split(" ") // task_id
+  const [taskId] = query
+  const task = await taskModel.findOne({uid: ctx.from.id, _id: +taskId, status: "w8ing4accept"})
   if (!task) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "Задача с таким id, ждущая того, чтобы вы её отклонили, не найдена 🤕")
     return

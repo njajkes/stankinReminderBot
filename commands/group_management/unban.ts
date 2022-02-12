@@ -3,19 +3,21 @@ import { ARG_LEN_ERR_MESSAGE, PERM_ERR_MESSAGE, USER_NOT_FOUND_ERR_MESSAGE } fro
 import { comDesc } from "../comDesc";
 
 export async function unban(ctx) {
-  const [groupName, username] = ctx.message.text.split(' ').slice(1)
-  if (!(groupName && username)) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "unban")
+  const query = ctx.message.text.split(' ').slice(1)
+  if (query.length != 2) {
+    ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "ban")
     return
   }
+
+  const [groupName, username] = query
   
-  const user = await userModel.findOne({uid: ctx.from.id, groupName: groupName, role: "admin"})
+  const user = await userModel.findOne({uid: ctx.from.id, groupName, role: "admin"})
   if (!user) {
     ctx.telegram.sendMessage(ctx.message.chat.id, PERM_ERR_MESSAGE + "unban")
     return
   }
 
-  const banned = await userModel.findOne({username: username, groupName: groupName, role: "banned"})
+  const banned = await userModel.findOne({username, groupName, role: "banned"})
   if (!banned) {
     ctx.telegram.sendMessage(ctx.message.chat.id, USER_NOT_FOUND_ERR_MESSAGE + "unban")
     return

@@ -1,6 +1,6 @@
 import { groupModel } from "../../models/groups";
 import { userModel } from "../../models/users";
-import { ARG_LEN_ERR_MESSAGE } from "../../utils/constants";
+import { ALLOWED_ROLES, ARG_LEN_ERR_MESSAGE } from "../../utils/constants";
 import { comDesc } from '../comDesc'
 
 export async function groupInfo(ctx): Promise<void> {
@@ -12,8 +12,8 @@ export async function groupInfo(ctx): Promise<void> {
   }
   
   const group = await groupModel.findOne({groupName: query})
-  const groupMembers = await userModel.find({groupName: query, $or: [{role: "member"}, {role: "moderator"}, {role: "admin"}]})
-  const user = await userModel.findOne({groupName: query, uid: ctx.from.id, $or: [{role: "member"}, {role: "moderator"}, {role: "admin"}]})
+  const groupMembers = await userModel.find({groupName: query, role: ALLOWED_ROLES})
+  const user = await userModel.findOne({groupName: query, uid: ctx.from.id, role: ALLOWED_ROLES})
   
   if (!user) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "Вы не состоите в группе, информацию о которой хотите получить")

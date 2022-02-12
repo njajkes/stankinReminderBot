@@ -10,17 +10,15 @@ export async function setInfo(ctx) {
     return
   }
 
-  const groupName: string = ctx.message.text.split(' ')[1]
-  const group = await groupModel.findOne({groupName: groupName, adminID: ctx.from.id})
+  const [groupName, ...newDescription] = query
+  const group = await groupModel.findOne({groupName, adminID: ctx.from.id})
 
   if (!group) {
     ctx.telegram.sendMessage(ctx.message.chat.id, PERM_ERR_MESSAGE + "set_info")
     return
   }
-  
-  const newDescription: string = query.slice(1).join(' ')
-  
-  group.description = newDescription
+
+  group.description = newDescription.join(' ')
   await group.save()
 
   ctx.telegram.sendMessage(ctx.message.chat.id, `Информация о группе ${groupName} успешно обновлена!`)

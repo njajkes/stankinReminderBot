@@ -10,7 +10,9 @@ export async function accept(ctx) {
     return
   }
 
-  const task = await taskModel.findOne({uid: ctx.from.id, _id: query, status: "w8ing4accept"})
+  const [taskId] = query
+
+  const task = await taskModel.findOne({uid: ctx.from.id, _id: +taskId, status: "w8ing4accept"})
   if (!task) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "Задача с таким id, ждущая того, чтобы вы её приняли, не найдена 🤕")
     return

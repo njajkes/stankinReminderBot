@@ -9,12 +9,13 @@ export async function showCandidates (ctx): Promise<void> {
     ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "show_candidates")
     return
   }
-  const group = await groupModel.findOne({groupName: query[0], adminID: ctx.from.id})
+  const [groupName] = query
+  const group = await groupModel.findOne({groupName, adminID: ctx.from.id})
   if (!group) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "Такой группы не существует, либо вы не являетесь админом в ней 🤕")
     return
   }
-  const users = await userModel.find({groupName: group.groupName, role: ["pending", "sended"]})
+  const users = await userModel.find({groupName, role: ["pending", "sended"]})
   if (users.length < 1) {
     ctx.telegram.sendMessage(ctx.message.chat.id, `Ожидающих вступления в группу ${group.groupName} не найдено :p`)
     return

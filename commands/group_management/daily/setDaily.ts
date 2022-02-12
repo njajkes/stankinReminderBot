@@ -10,17 +10,15 @@ export async function setDaily(ctx) {
     return
   }
 
-  const groupName: string = ctx.message.text.split(' ')[1]
-  const group = await groupModel.findOne({groupName: groupName, adminID: ctx.from.id})
+  const [groupName, ...newDaily] = query
+  const group = await groupModel.findOne({groupName, adminID: ctx.from.id})
 
   if (!group) {
     ctx.telegram.sendMessage(ctx.message.chat.id, PERM_ERR_MESSAGE + "set_daily")
     return
   }
   
-  const newDaily: string = query.slice(1).join(' ')
-  
-  group.daily = newDaily
+  group.daily = newDaily.join(' ')
   await group.save()
 
   ctx.telegram.sendMessage(ctx.message.chat.id, `Сообщение дня для группы ${groupName} успешно обновлено!`)

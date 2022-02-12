@@ -4,7 +4,7 @@ import { comDesc } from '../comDesc'
 
 export async function showTasks(ctx) {
   const w8ing4acceptTasks = await taskModel.find({uid: ctx.from.id, status: "w8ing4accept"}).sort({time: 1})
-  const pendingTasks = await taskModel.find( { uid: ctx.from.id, $or: [ { status: "pending" }, { status: "waiting" } ] } ).sort({time: 1})
+  const pendingTasks = await taskModel.find( { uid: ctx.from.id, status: ["pending", "waiting"] } ).sort({time: 1})
   if (!w8ing4acceptTasks.length && !pendingTasks.length) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "Задач, ожидающих выполнения или принятия, не найдено 🤕")
     return

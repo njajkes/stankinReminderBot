@@ -4,14 +4,14 @@ import { findPendingTasks } from "../controllers/tasks";
 
 export default async function taskTracker(bot: Telegraf<Context<Update>>) {
   const tasks = await findPendingTasks(Date.now());
-  let i = 0
+  let i = 1
   for (let task of tasks) {
     bot.telegram.sendMessage(task.uid, `Предмет: ${task.discipline}\nОписание: ${task.description}`);
     task.status = 'pending';
     await task.save();
-    if (i++ >= 30) {
-      await new Promise((resolve) => setTimeout(resolve, 1200))
-      i = 0
+    if (i++ >= 24) {
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      i = 1
     }
   };
 }

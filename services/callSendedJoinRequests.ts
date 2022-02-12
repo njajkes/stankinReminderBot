@@ -23,7 +23,7 @@ export default async function callSendedJoinRequests(bot: Telegraf<Context<Updat
     await candidate.save()
   }
 
-  let i = 0
+  let it = 1
   for (let admin of Object.getOwnPropertyNames(admins)) {
     let msg: string = "Привет! Список жаждущий вступления в ваши группы:"
     const adminGroups = Object.getOwnPropertyNames(admins[admin])
@@ -37,9 +37,9 @@ export default async function callSendedJoinRequests(bot: Telegraf<Context<Updat
       })
     })
     bot.telegram.sendMessage(+admin, msg)
-    if (i++ >= 30) {
-      await new Promise((resolve) => setTimeout(resolve, 1200))
-      i = 0
+    if (it++ >= 24) {
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      it = 1
     }
   }
 }

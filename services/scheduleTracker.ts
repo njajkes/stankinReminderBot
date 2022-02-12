@@ -6,7 +6,7 @@ import { userModel } from "../models/users";
 import { ALLOWED_ROLES } from "../utils/constants";
 
 export default async function scheduleTracker(bot: Telegraf<Context<Update>>): Promise<void> {
-  const schedulesFile: Buffer = await fs.readFile("..\\schedule\\parsedSchedules.json")
+  const schedulesFile: Buffer = await fs.readFile("C:\\Users\\Bulbuljator3001\\Desktop\\repos\\stankinReminderBot\\schedule\\parsedSchedules.json")
   let prefix: string = "Доброе утро! Расписание на сегодня:\n\n", // 0 - morning, 1 - evening
       suffix: string = "\nХорошего учебного дня!"
   const timeNow: Date = new Date(Date.now())
@@ -27,8 +27,8 @@ export default async function scheduleTracker(bot: Telegraf<Context<Update>>): P
     console.log(message)
     for (let user of users) {
       bot.telegram.sendMessage(user.uid, message)
-      if (i++ >= 30) {
-        await new Promise(resolve => setTimeout(resolve, 1200))
+      if (i++ >= 24) {
+        await new Promise(resolve => setTimeout(resolve, 1000))
         i = 1
       }
     }

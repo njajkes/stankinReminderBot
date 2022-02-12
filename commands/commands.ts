@@ -22,6 +22,8 @@ import { kick, kickDescription } from './group_management/kick'
 import { unban, unbanDescription } from './group_management/unban'
 import { declineJoin, declineJoinDescription } from './members/declineJoin'
 import { sendAll, sendAllDescription } from './group_management/sendAll'
+import { sub, subDescription } from './members/sub'
+import { unsub, unsubDescription } from './members/unsub'
 
 class command {
   func: (ctx: any) => Promise<void>
@@ -57,7 +59,9 @@ export const commands = [
   new command(sendAll, "send_all"),
   new command(ban, "ban"),
   new command(unban, "unban"),
-  new command(kick, "kick")
+  new command(kick, "kick"),
+  new command(sub, "sub"),
+  new command(unsub, "unsub")
 ]
 
 export const commandDescriptions = [
@@ -85,5 +89,7 @@ export const commandDescriptions = [
   sendAllDescription,
   banDescription,
   unbanDescription,
-  kickDescription
+  kickDescription,
+  subDescription,
+  unsubDescription
 ]

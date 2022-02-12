@@ -18,28 +18,35 @@ async function databaseStart() {
 databaseStart()
 
 const bot = new Telegraf(TOKEN)
+
 bindCommandsOnBot(bot)
 
 bot.command('ctx', (ctx) => {
-  console.dir(ctx.from)
+  console.dir(ctx)
 })
 bot.on("message", (ctx) => {
   ctx.telegram.sendMessage(ctx.message.chat.id, "Пожалуйста, введите какую-нибудь команду! Я не понимаю по-другому 😖\nСписок всех команд: /help")
 })
 
-setInterval(async () => {
-  await callSendedJoinRequests(bot)
-}, 1800000) // every 30min
+let min = 0
 
 setInterval(async () => {
-  const hourNow = (new Date(Date.now())).getHours()
-  if (hourNow == 18 || hourNow == 6) {
-    await new Promise(resolve => setTimeout(resolve, 1200))
-    await scheduleTracker(bot)
+  min++
+
+  if (!(min % 30)) {
+    await callSendedJoinRequests(bot)
+    await new Promise(resolve => setTimeout(resolve, 5000))
   }
-}, 3600000) // every 1hour
-
-setInterval(async () => {
+  console.log(min, "passed" + 1)
+  if (!(min % 60)) {
+    const hourNow = (new Date(Date.now())).getHours()
+    if (hourNow == 18 || hourNow == 7) {
+      await scheduleTracker(bot)
+    }
+    min = 0
+    await new Promise(resolve => setTimeout(resolve, 10000))
+  }
+  console.log(min, "passed" + 2)
   await taskTracker(bot)
 }, 60000) // every 1min
 

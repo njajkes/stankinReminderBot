@@ -1,8 +1,9 @@
 import { groupModel } from "../../../models/groups";
 import { ARG_LEN_ERR_MESSAGE, PERM_ERR_MESSAGE } from "../../../utils/constants";
 import { comDesc } from '../../comDesc'
+import { command } from "../../command";
 
-export async function setInfo(ctx) {
+async function setInfo(ctx) {
   const query: string[] = ctx.message.text.split(' ').slice(1)
 
   if (query.length < 2) {
@@ -24,4 +25,6 @@ export async function setInfo(ctx) {
   ctx.telegram.sendMessage(ctx.message.chat.id, `Информация о группе ${groupName} успешно обновлена!`)
 }
 
-export const setInfoDescription = new comDesc("/set_info [group_name] [info]", "устанавливает описание группы", 2, "group_name - группа, информацию о которой вы хотите изменить", "info - описание, которое вы хотите установить", "ВАЖНО: предыдущее описание безвозвратно затрётся")
+const setInfoDescription = new comDesc("/set_info [group_name] [info]", "устанавливает описание группы", 2, "group_name - группа, информацию о которой вы хотите изменить", "info - описание, которое вы хотите установить", "ВАЖНО: предыдущее описание безвозвратно затрётся")
+
+export const SetInfo = new command(setInfo, "set_info", setInfoDescription)

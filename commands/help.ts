@@ -1,11 +1,14 @@
 import { comDesc } from './comDesc'
-import { commandDescriptions } from './commands'
+import { command } from './command'
+import { commands } from './commands'
 
-export const helpDescription = new comDesc("/help [flag/command]", "все команды и их синтаксис", 0, "flag - необязательный атрибут, подробнее: /help -h", "command - необязательный атрибут, ")
-export const helpFlagsDescription = new comDesc("/help [flag]", "все команды и их синтаксис", 1, "flag - необязательный атрибут, устанавливает флаг, по которому будут выводиться команды", "Если флаг не был установлен, выводятся команды, доступные всем пользователям", "-h - выводит все флаги :)", "-adm - выводит команды админа группы", "-mod - выводит команды модератора группы")
+const helpDescription = new comDesc("/help [flag/command]", "все команды и их синтаксис", 0, "flag - необязательный атрибут, подробнее: /help -h", "command - необязательный атрибут, ")
+const helpFlagsDescription = new comDesc("/help [flag]", "все команды и их синтаксис", 1, "flag - необязательный атрибут, устанавливает флаг, по которому будут выводиться команды", "Если флаг не был установлен, выводятся команды, доступные всем пользователям", "-h - выводит все флаги :)", "-adm - выводит команды админа группы", "-mod - выводит команды модератора группы")
 
-export async function help(ctx) {
-  const descriptions: comDesc[] = commandDescriptions
+async function help(ctx) {
+  const descriptions: comDesc[] = commands.map(com => com.description)
+  descriptions.push(helpFlagsDescription)
+  
   let perm = 0, result: string
   const query: string | undefined = ctx.update.message.text.split(' ')[1]
   let com: string
@@ -53,3 +56,5 @@ function helpMessageForming(commandsDescriptions: comDesc[], permissionLevel: nu
   })
   return result
 }
+
+export const Help = new command(help, "help", helpDescription)

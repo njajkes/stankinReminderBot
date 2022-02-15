@@ -2,8 +2,9 @@ import { groupModel } from "../../models/groups";
 import { userModel } from "../../models/users";
 import { ALLOWED_ROLES, ARG_LEN_ERR_MESSAGE, PERM_ERR_MESSAGE } from "../../utils/constants";
 import { comDesc } from "../comDesc";
+import { command } from "../command";
 
-export async function sendAll(ctx) {
+async function sendAll(ctx) {
   const query = ctx.message.text.split(' ').slice(1)
   
   if (query.length < 2) {
@@ -39,4 +40,6 @@ export async function sendAll(ctx) {
   ctx.telegram.sendMessage(ctx.message.chat.id, "Сообщение успешно разослано всем участникам группы " + groupName)
 }
 
-export const sendAllDescription = new comDesc("/send_all [group_name] [message]", "отправить сообщение всем в группе", 3, "group_name - название группы", "message - текст, который вы хотите разослать всем в группе")
+const sendAllDescription = new comDesc("/send_all [group_name] [message]", "отправить сообщение всем в группе", 3, "group_name - название группы", "message - текст, который вы хотите разослать всем в группе")
+
+export const SendAll = new command(sendAll, "send_all", sendAllDescription)

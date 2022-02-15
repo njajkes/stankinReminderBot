@@ -2,8 +2,9 @@ import { groupModel } from "../../models/groups"
 import { userModel } from "../../models/users"
 import { ARG_LEN_ERR_MESSAGE, PERM_ERR_MESSAGE, USER_NOT_FOUND_ERR_MESSAGE } from "../../utils/constants"
 import { comDesc } from '../comDesc'
+import { command } from "../command"
 
-export async function addMod(ctx): Promise<void> {
+async function addMod(ctx): Promise<void> {
   const query: string[] = ctx.message.text.split(' ').slice(1)
 
   if (query.length != 2) {
@@ -31,4 +32,6 @@ export async function addMod(ctx): Promise<void> {
   ctx.telegram.sendMessage(ctx.message.chat.id, `Пользователь ${username} успешно добавлен в модераторы!`)
 }
 
-export const addModDescription = new comDesc("/add_mod [group_name] [username]", "добавить модератора в группу", 2, "group_name - группа, в которую вы хотите добавить модератора", "username - ник пользователя (без \"@\"), которого вы хотите добавить в модераторы", "Пример: /add_mod клан_крутые_гремлины vasya")
+const addModDescription = new comDesc("/add_mod [group_name] [username]", "добавить модератора в группу", 2, "group_name - группа, в которую вы хотите добавить модератора", "username - ник пользователя (без \"@\"), которого вы хотите добавить в модераторы", "Пример: /add_mod клан_крутые_гремлины vasya")
+
+export const AddMod = new command(addMod, "add_mod", addModDescription)

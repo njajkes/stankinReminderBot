@@ -2,8 +2,9 @@ import { groupModel } from "../../models/groups";
 import { userModel } from "../../models/users";
 import { ARG_LEN_ERR_MESSAGE } from "../../utils/constants";
 import { comDesc } from '../comDesc'
+import { command } from "../command";
 
-export async function joinGroup(ctx): Promise<void> {
+async function joinGroup(ctx): Promise<void> {
   const query = ctx.message.text.split(' ').slice(1)
   if (query.length != 1) {
     ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "join_group")
@@ -33,4 +34,6 @@ export async function joinGroup(ctx): Promise<void> {
   ctx.telegram.sendMessage(ctx.message.chat.id, "Заявка на вступление в группу " + group.groupName + " успешно отправлена!")
 }
 
-export const joinGroupDescription = new comDesc("/join_group [group_name]", "отправить заявку на вступление в группу", 0, "group_name - название группы одним словом (как написано в /group_list, например: \"клан_крутые_гремлины\" вместо \"клан крутые гремлины\")", "Пример: /join_group клан_крутые_гремлины")
+const joinGroupDescription = new comDesc("/join_group [group_name]", "отправить заявку на вступление в группу", 0, "group_name - название группы одним словом (как написано в /group_list, например: \"клан_крутые_гремлины\" вместо \"клан крутые гремлины\")", "Пример: /join_group клан_крутые_гремлины")
+
+export const JoinGroup = new command(joinGroup, "join_group", joinGroupDescription)

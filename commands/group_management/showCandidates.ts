@@ -2,8 +2,9 @@ import { groupModel } from "../../models/groups";
 import { userModel } from "../../models/users";
 import { ARG_LEN_ERR_MESSAGE } from "../../utils/constants";
 import { comDesc } from '../comDesc'
+import { command } from "../command";
 
-export async function showCandidates (ctx): Promise<void> {
+async function showCandidates (ctx): Promise<void> {
   const query = ctx.message.text.split(' ').slice(1)
   if (query.length != 1) {
     ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "show_candidates")
@@ -30,4 +31,6 @@ export async function showCandidates (ctx): Promise<void> {
   ctx.telegram.sendMessage(ctx.message.chat.id, result)
 }
 
-export const showCandidatesDescription = new comDesc("/show_candidates [group_name]", "вывести список всех ожидающих вступления в группу", 2, "group_name - название группы, в которой вы являетесь админом")
+const showCandidatesDescription = new comDesc("/show_candidates [group_name]", "вывести список всех ожидающих вступления в группу", 2, "group_name - название группы, в которой вы являетесь админом")
+
+export const ShowCandidates = new command(showCandidates, "show_candidates", showCandidatesDescription)

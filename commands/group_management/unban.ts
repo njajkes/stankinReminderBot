@@ -1,8 +1,9 @@
 import { userModel } from "../../models/users";
 import { ARG_LEN_ERR_MESSAGE, PERM_ERR_MESSAGE, USER_NOT_FOUND_ERR_MESSAGE } from "../../utils/constants";
 import { comDesc } from "../comDesc";
+import { command } from "../command";
 
-export async function unban(ctx) {
+async function unban(ctx) {
   const query = ctx.message.text.split(' ').slice(1)
   if (query.length != 2) {
     ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "ban")
@@ -36,4 +37,6 @@ export async function unban(ctx) {
   )
 }
 
-export const unbanDescription = new comDesc("/unban [group_name] [username]", "выгоняет участника из группы", 3)
+const unbanDescription = new comDesc("/unban [group_name] [username]", "выгоняет участника из группы", 3)
+
+export const Unban = new command(unban, "unban", unbanDescription)

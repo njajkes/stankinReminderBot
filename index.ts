@@ -40,7 +40,7 @@ setInterval(async () => {
   console.log(min, "passed" + 1)
   if (!(min % 60)) {
     const hourNow = (new Date(Date.now())).getHours()
-    if (hourNow == 18 || hourNow == 7) {
+    if (hourNow == 18 || hourNow == 6) {
       await scheduleTracker(bot)
     }
     min = 0

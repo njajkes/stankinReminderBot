@@ -3,8 +3,9 @@ import { groupModel } from "../../models/groups";
 import { userModel } from "../../models/users";
 import { ARG_LEN_ERR_MESSAGE, SYNTAX_ERR_MESSAGE } from "../../utils/constants";
 import { comDesc } from '../comDesc'
+import { command } from "../command";
 
-export async function addGroup(ctx): Promise<void> {
+async function addGroup(ctx): Promise<void> {
   const query: string[] = ctx.message.text.split(' ').slice(1)
   
   if (query.length != 2) {
@@ -37,4 +38,6 @@ export async function addGroup(ctx): Promise<void> {
   ctx.telegram.sendMessage(ctx.message.chat.id, "Группа была успешно добавлена!\n")
 }
 
-export const addGroupDescription = new comDesc("/add_group [group_name] [tracked]", "добавить группу", 0, "group_name - название группы (1 слово без пробелов)", "tracked - будет ли группа отображаться в общем списке групп (0 или 1)", "Пример: /add_group клан_крутые_гремлины 0")
+const addGroupDescription = new comDesc("/add_group [group_name] [tracked]", "добавить группу", 0, "group_name - название группы (1 слово без пробелов)", "tracked - будет ли группа отображаться в общем списке групп (0 или 1)", "Пример: /add_group клан_крутые_гремлины 0")
+
+export const AddGroup = new command(addGroup, "add_group", addGroupDescription)

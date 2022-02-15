@@ -1,8 +1,9 @@
 import { groupModel } from "../../../models/groups";
 import { ARG_LEN_ERR_MESSAGE, PERM_ERR_MESSAGE } from "../../../utils/constants";
 import { comDesc } from '../../comDesc'
+import { command } from "../../command";
 
-export async function delDaily(ctx) {
+async function delDaily(ctx) {
   const query: string[] = ctx.message.text.split(' ').slice(1)
 
   if (query.length != 1) {
@@ -24,4 +25,6 @@ export async function delDaily(ctx) {
   ctx.telegram.sendMessage(ctx.message.chat.id, `Сообщение дня для группы ${groupName} успешно удалено!`)
 }
 
-export const delDailyDescription = new comDesc("/del_info [group_name]", "безвозвратно стирает сообщение дня группы", 2, "group_name - группа, сообщение дня которой вы хотите удалить", "ВАЖНО: это действие нельзя будет отменить. Отдавайте себе отчёт о том, что делаете.")
+const delDailyDescription = new comDesc("/del_daily [group_name]", "безвозвратно стирает сообщение дня группы", 2, "group_name - группа, сообщение дня которой вы хотите удалить", "ВАЖНО: это действие нельзя будет отменить. Отдавайте себе отчёт о том, что делаете.")
+
+export const DeleteDaily = new command(delDaily, "del_daily", delDailyDescription)

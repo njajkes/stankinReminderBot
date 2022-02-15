@@ -2,8 +2,9 @@ import { groupModel } from "../../models/groups";
 import { userModel } from "../../models/users";
 import { ALLOWED_ROLES, ARG_LEN_ERR_MESSAGE } from "../../utils/constants";
 import { comDesc } from '../comDesc'
+import { command } from "../command";
 
-export async function groupInfo(ctx): Promise<void> {
+async function groupInfo(ctx): Promise<void> {
   const query = ctx.message.text.split(' ')[1]
 
   if (!query) {
@@ -42,4 +43,6 @@ export async function groupInfo(ctx): Promise<void> {
   ctx.telegram.sendMessage(ctx.message.chat.id, result)
 }
 
-export const groupInfoDescription = new comDesc("/group_info [group_name]", "выводит информацию о группе", 0, "group_name - название группы, информацию о которой вы хотите получить", "Выводит описание, сообщение дня и участников группы")
+const groupInfoDescription = new comDesc("/group_info [group_name]", "выводит информацию о группе", 0, "group_name - название группы, информацию о которой вы хотите получить", "Выводит описание, сообщение дня и участников группы")
+
+export const GroupInfo = new command(groupInfo, "group_info", groupInfoDescription)

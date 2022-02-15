@@ -1,12 +1,13 @@
 import { Context, Telegraf } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 import * as fs from "fs/promises"
+import * as path from "path"
 import dateStringify from "../utils/dateStringify";
 import { userModel } from "../models/users";
 import { ALLOWED_ROLES } from "../utils/constants";
 
 export default async function scheduleTracker(bot: Telegraf<Context<Update>>): Promise<void> {
-  const schedulesFile: Buffer = await fs.readFile("C:\\Users\\Bulbuljator3001\\Desktop\\repos\\stankinReminderBot\\schedule\\parsedSchedules.json")
+  const schedulesFile: Buffer = await fs.readFile(__dirname + path.sep + path.join( "..", "schedule", "parsedSchedules.json"))
   let prefix: string = "Доброе утро! Расписание на сегодня:\n\n", // 0 - morning, 1 - evening
       suffix: string = "\nХорошего учебного дня!"
   const timeNow: Date = new Date(Date.now())

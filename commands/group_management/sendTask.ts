@@ -4,20 +4,21 @@ import { taskModel } from "../../models/tasks";
 import { userModel } from "../../models/users";
 import { ALLOWED_ROLES, ARG_LEN_ERR_MESSAGE, SYNTAX_ERR_MESSAGE } from "../../utils/constants";
 import { comDesc } from '../comDesc'
+import { command } from "../command";
 
-export async function sendTask(ctx): Promise<void> {
+async function sendTask(ctx): Promise<void> {
   const query = ctx.message.text.split(' ').slice(1)
+
+  if (query.length < 7) {
+    ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "send_task")
+    return
+  }
 
   const [groupQuery, ...taskQuery] = query
   
   const group = await groupModel.findOne({groupName: groupQuery})
   const user = await userModel.findOne({uid: ctx.from.id, groupName: groupQuery, role: ["moderator", "admin"]})
 
-  if (query.length < 7) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "send_task")
-    return
-  }
-  
   if (!group || !user || (user.role !== "moderator" && user.role !== "admin")) {
     ctx.telegram.sendMessage(ctx.message.chat.id, "Группа не найдена либо вы не являетесь в ней модератором или админом 🤕")
     return
@@ -28,7 +29,8 @@ export async function sendTask(ctx): Promise<void> {
     return
   }
 
-  const time = (new Date(taskQuery.slice(0, 4).join(' '))).getTime()
+  const time = new Date(taskQuery.slice(0, 4).join(' '))
+  time.setHours(time.getHours() - 3)
   const discipline = taskQuery[4].split('_').join(' ')
   const description = taskQuery.slice(5).join(' ')
 
@@ -39,7 +41,7 @@ export async function sendTask(ctx): Promise<void> {
       uid: member.uid,
       description: description,
       discipline: discipline,
-      time: time,
+      time: time.getTime(),
       status: "w8ing4accept"
     })
 
@@ -53,7 +55,7 @@ export async function sendTask(ctx): Promise<void> {
   }
   ctx.telegram.sendMessage(ctx.message.chat.id, `Задача успешно разослана всем в группе ${groupQuery}!`)
 }
-export const sendTaskDescription = new comDesc(
+const sendTaskDescription = new comDesc(
   "/send_task [group] [time] [description] [discipline]", 
   "отправить задачу участникам группы", 
   3, 
@@ -62,3 +64,5 @@ export const sendTaskDescription = new comDesc(
   "description - содержит описание задачи",
   "discipline - содержит предмет, по поводу которого срабатывает напоминание. \n    ВАЖНО: При указании предмета, пробелы заменяются нижними подчеркиваниями для успешного парса строки",
   "Пример: /add_task клан_крутые_гремлины 01 01 2023 15:45 Другое покушать")
+
+export const SendTask = new command(sendTask, "send_task", sendTaskDescription)

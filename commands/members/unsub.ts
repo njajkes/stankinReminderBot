@@ -2,8 +2,9 @@ import { userModel } from "../../models/users"
 import { ALLOWED_ROLES, ARG_LEN_ERR_MESSAGE } from "../../utils/constants"
 import { getStankinGroups } from "../../utils/getStankinGroups"
 import { comDesc } from "../comDesc"
+import { command } from "../command"
 
-export async function unsub(ctx) {
+async function unsub(ctx) {
   const query = ctx.message.text.split(' ').slice(1)
   if (query.length != 1) {
     ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "unsub")
@@ -35,4 +36,6 @@ export async function unsub(ctx) {
   ctx.telegram.sendMessage(ctx.message.chat.id, `Вы успешно отписались от рассылки расписания группы ${groupName}!`)
 }
 
-export const unsubDescription = new comDesc("/unsub [group_name]", "отписаться от расписания своей группы", 0, "group_name - группа, от расписания которой вы хотите отписаться. Вы должны состоять в ней и быть подписаны (по умолчанию, при вступлении в СТАНКИНовскую группу вы подписываетесь на неё).")
+const unsubDescription = new comDesc("/unsub [group_name]", "отписаться от расписания своей группы", 0, "group_name - группа, от расписания которой вы хотите отписаться. Вы должны состоять в ней и быть подписаны (по умолчанию, при вступлении в СТАНКИНовскую группу вы подписываетесь на неё).")
+
+export const Unsub = new command(unsub, "unsub", unsubDescription)

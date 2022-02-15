@@ -2,8 +2,9 @@ import { userModel } from "../../models/users"
 import { ALLOWED_ROLES, ARG_LEN_ERR_MESSAGE } from "../../utils/constants"
 import { getStankinGroups } from "../../utils/getStankinGroups"
 import { comDesc } from "../comDesc"
+import { command } from "../command"
 
-export async function sub(ctx) {
+async function sub(ctx) {
   const query = ctx.message.text.split(' ').slice(1)
   if (query.length != 1) {
     ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "sub")
@@ -34,4 +35,6 @@ export async function sub(ctx) {
   ctx.telegram.sendMessage(ctx.message.chat.id, `Вы успешно подписались на рассылку расписания группы ${groupName}!`)
 }
 
-export const subDescription = new comDesc("/sub [group_name]", "подписаться на расписание своей группы", 0, "group_name - группа, на расписание которой вы хотите подписаться. Вы должны состоять в ней (по умолчанию, при вступлении в СТАНКИНовскую группу вы подписываетесь на неё).")
+const subDescription = new comDesc("/sub [group_name]", "подписаться на расписание своей группы", 0, "group_name - группа, на расписание которой вы хотите подписаться. Вы должны состоять в ней (по умолчанию, при вступлении в СТАНКИНовскую группу вы подписываетесь на неё).")
+
+export const Sub = new command(sub, "sub", subDescription)

@@ -3,8 +3,9 @@ import { userModel } from "../../models/users";
 import { ARG_LEN_ERR_MESSAGE, PERM_ERR_MESSAGE, USER_NOT_FOUND_ERR_MESSAGE } from "../../utils/constants";
 import { getStankinGroups } from "../../utils/getStankinGroups";
 import { comDesc } from '../comDesc'
+import { command } from "../command";
 
-export async function acceptJoin(ctx): Promise<void> {
+async function acceptJoin(ctx): Promise<void> {
   const query:string[] = ctx.message.text.split(' ').slice(1)
   if (query.length != 2) {
     ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "accept_join")
@@ -35,4 +36,6 @@ export async function acceptJoin(ctx): Promise<void> {
   ctx.telegram.sendMessage(user.uid, `Вас успешно приняли в группу ${user.groupName}!`)
 }
 
-export const acceptJoinDescription = new comDesc("/accept_join [group_name] [username]", "принять заявку на вступление в группу", 2, "group_name - название группы одним словом", "username - юзернейм кандидата на вступление (без символа \"@\"", "Пример: /accept_join клан_крутые_гремлины kirito993")
+const acceptJoinDescription = new comDesc("/accept_join [group_name] [username]", "принять заявку на вступление в группу", 2, "group_name - название группы одним словом", "username - юзернейм кандидата на вступление (без символа \"@\"", "Пример: /accept_join клан_крутые_гремлины kirito993")
+
+export const AcceptJoin = new command(acceptJoin, "accept_join", acceptJoinDescription)

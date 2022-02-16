@@ -7,6 +7,7 @@ function reschedule(m: number) {
     const {taskID, message} = parseCallbackQuery(ctx)
     const task = await taskModel.findById(taskID)
     task.time = Date.now() + m*60*1000
+    task.status = "waiting"
     await task.save()
     let msg: string;
     switch(m) {

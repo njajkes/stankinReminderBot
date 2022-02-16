@@ -4,3 +4,5 @@ schedule/assets
 *.js
 дб к боту схема.drawio
 schedule/parsedSchedules.json
+*.log
+node_modules/*

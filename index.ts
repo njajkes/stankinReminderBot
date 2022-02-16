@@ -6,6 +6,7 @@ import taskTracker from "./services/taskTracker"
 import bindCommandsOnBot from './utils/bindCommandsOnBot'
 import callSendedJoinRequests from './services/callSendedJoinRequests'
 import scheduleTracker from './services/scheduleTracker'
+import debug from './utils/debug'
 
 const { TOKEN, MONGO } = dotenv.config().parsed
 async function databaseStart() {
@@ -16,14 +17,11 @@ async function databaseStart() {
   }
 } 
 databaseStart()
-
 const bot = new Telegraf(TOKEN)
 
+debug(bot)
 bindCommandsOnBot(bot)
 
-bot.command('ctx', (ctx) => {
-  console.dir(ctx)
-})
 bot.on("message", (ctx) => {
   ctx.telegram.sendMessage(ctx.message.chat.id, "Пожалуйста, введите какую-нибудь команду! Я не понимаю по-другому 😖\nСписок всех команд: /help")
 })

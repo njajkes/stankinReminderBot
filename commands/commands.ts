@@ -24,6 +24,7 @@ import { DeclineJoin } from './members/declineJoin'
 import { SendAll } from './group_management/sendAll'
 import { Sub } from './members/sub'
 import { Unsub } from './members/unsub'
+import { Schedule } from './schedule'
 
 export const commands = [
   Start,
@@ -51,5 +52,6 @@ export const commands = [
   Ban,
   Unban,
   Sub,
-  Unsub
+  Unsub,
+  Schedule
 ]

@@ -1,3 +1,5 @@
+import { Markup } from "telegraf"
+
 export const TASK_DEFAULT = {
   inline_keyboard: [
     [{text: "✅", callback_data: "DONE_TASK_ACTION"}, {text: "❌", callback_data: "FAILED_TASK_ACTION"}],
@@ -18,3 +20,9 @@ export const EDIT_TASK_TIME_2_PAGE = {
     [{text:"🕔 06:00", callback_data: "RESCH_6HOUR_ACTION"},{text:"🕔 12:00", callback_data: "RESCH_12HOUR_ACTION"},{text:"🕔 24:00", callback_data: "RESCH_24HOUR_ACTION"}]
   ]
 }
+
+export const SCHEDULE_EDIT_DEFAULT = Markup.inlineKeyboard([
+  Markup.button.callback("1 день", "SCHEDULE_CHANGE_1D"),
+  Markup.button.callback("3 дня", "SCHEDULE_CHANGE_3D"),
+  Markup.button.callback("7 дней", "SCHEDULE_CHANGE_7D")
+])

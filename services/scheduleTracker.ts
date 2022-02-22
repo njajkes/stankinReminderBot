@@ -35,7 +35,7 @@ export default async function scheduleTracker(bot: Telegraf<Context<Update>>): P
   }
 }
 
-function scheduleToMessage(schedule: object):string {
+export function scheduleToMessage(schedule: object):string {
   const PRIORITY_LIST = ['8:30-10:10', '8:30-12:00', '10:20-12:00', '10:20-14:00', '12:20-14:00', '12:20-15:50', '14:10-15:50', '14:10-17:40', '16:00-17:40', '16:00-19:30', '18:00-19:30', '18:00-21:10', '19:40-21:10', '19:40-22:50', '21:20-22:50']
   let result: string = ""
   for (let time of PRIORITY_LIST) {

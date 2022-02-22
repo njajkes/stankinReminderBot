@@ -12,8 +12,10 @@
   "dependencies": {
     "@typegoose/auto-increment": "^1.1.0",
     "@typegoose/typegoose": "^9.5.0",
+    "@types/lodash": "^4.14.178",
     "@types/pg": "^8.6.3",
     "dotenv": "^10.0.0",
+    "lodash": "^4.17.21",
     "mongoose": "^6.1.0",
     "nodemon": "^2.0.15",
     "pdf-parse": "^1.1.1",

@@ -2,7 +2,7 @@ import { Markup } from "telegraf"
 
 export const TASK_DEFAULT = {
   inline_keyboard: [
-    [{text: "✅", callback_data: "DONE_TASK_ACTION"}, {text: "❌", callback_data: "FAILED_TASK_ACTION"}],
+    [{text: "✅ Сделано", callback_data: "DONE_TASK_ACTION"}, {text: "❌ Провалено", callback_data: "FAILED_TASK_ACTION"}],
     [{text: "🕔 Изменить время", callback_data: "EDIT_TASK_TIME_ACTION"}]
   ]
 }
@@ -25,4 +25,22 @@ export const SCHEDULE_EDIT_DEFAULT = Markup.inlineKeyboard([
   Markup.button.callback("1 день", "SCHEDULE_CHANGE_1D"),
   Markup.button.callback("3 дня", "SCHEDULE_CHANGE_3D"),
   Markup.button.callback("7 дней", "SCHEDULE_CHANGE_7D")
+])
+
+export const SEND_TASK = Markup.inlineKeyboard([
+  Markup.button.callback("✅ Принять", "ACCEPT_TASK_ACTION"),
+  Markup.button.callback("❌ Отклонить", "DECLINE_TASK_ACTION")
+])
+
+export const FIRST_GROUPS_LIST = Markup.inlineKeyboard([
+  Markup.button.callback("-->", "GROUPS_LIST_NEXT")
+])
+
+export const MED_GROUPS_LIST = Markup.inlineKeyboard([
+  Markup.button.callback("<--", "GROUPS_LIST_PREV"),
+  Markup.button.callback("-->", "GROUPS_LIST_NEXT")
+])
+
+export const LAST_GROUPS_LIST = Markup.inlineKeyboard([
+  Markup.button.callback("<--", "GROUPS_LIST_PREV")
 ])

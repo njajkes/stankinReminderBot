@@ -23,7 +23,7 @@ async function accept(ctx) {
     return
   }
   task.status = "waiting"
-  task.save()
+  await task.save()
   ctx.telegram.sendMessage(ctx.message.chat.id, `Задача ${task._id} успешно сохранена!`)
 }
 

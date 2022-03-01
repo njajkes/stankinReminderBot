@@ -1,10 +1,10 @@
-import { ARG_LEN_ERR_MESSAGE, SYNTAX_ERR_MESSAGE } from "../../../_stankinReminderBot/utils/constants";
+import { ARG_LEN_ERR_MESSAGE, SYNTAX_ERR_MESSAGE } from "../../utils/constants";
 import { taskModel } from "../../models/tasks";
 import { comDesc } from '../comDesc'
 import { command } from "../command";
 
 async function decline(ctx) {
-  const query = ctx.message.text.split(" ") // task_id
+  const query = ctx.message.text.split(" ").slice(1) // task_id
   if (query.length != 1) {
     ctx.telegram.sendMessage(ctx.message.chat.id, ARG_LEN_ERR_MESSAGE + "decline")
     return
@@ -20,7 +20,7 @@ async function decline(ctx) {
     return
   }
   task.status = "decline"
-  task.save()
+  await task.save()
   ctx.telegram.sendMessage(ctx.message.chat.id, `Задача ${task._id} успешно отклонена!`)
 }
 

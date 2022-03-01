@@ -36,7 +36,7 @@ async function executeParser() {
       const type = el.type == "Lecture" ? "Лекция" : el.type == "Seminar" ? "Семинар" : el.subgroup == "A" ? "Лаб. для А" : "Лаб. для Б";
 
       const formatedString = el.title + " (" + type + "): " + lecturer + " (" + classroom + ") "
-      const time = `${el.time.start}-${el.time.end}`
+      const time = el.subgroup != "Common" ? `${el.time.start}-${el.time.end}${el.subgroup}` : `${el.time.start}-${el.time.end}`
       const dates = datesConverter(el.dates)
       
       dates.forEach(date => {

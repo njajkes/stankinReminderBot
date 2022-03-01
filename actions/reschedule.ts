@@ -4,7 +4,7 @@ import { Action } from "./action";
 
 function reschedule(m: number) {
   return async function(ctx) {
-    const {taskID, message} = parseCallbackQuery(ctx)
+    const {taskID, message} = parseCallbackQuery(ctx, {task: true})
     const task = await taskModel.findById(taskID)
     task.time = Date.now() + m*60*1000
     task.status = "waiting"

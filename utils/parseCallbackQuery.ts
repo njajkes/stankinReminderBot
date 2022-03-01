@@ -1,8 +1,19 @@
-export function parseCallbackQuery(ctx) {
-  const regexp = /\d+/
-  const {message} = ctx.update.callback_query
+export function parseCallbackQuery(ctx, options?: {gl?: boolean, task?: boolean}) {
+  const taskIDregexp = /Идентификатор задачи: (\d{0,})/m
+  
+  const {message} = ctx.update.callback_query;
+  const npageRegexp = /Номер страницы: (\d{0,}) из (\d{0,})/m
 
-  const [taskID] = message.text.match(regexp).map(el=>+el)
+  let nPageNow: number
+  let nPageAll: number
+  let taskID: number
 
-  return {taskID, message}
+  if (options?.gl) {
+    [, nPageNow, nPageAll] = message.text.match(npageRegexp)?.map(el=>+el)
+  }
+  if (options?.task) {
+    [, taskID] = message.text.match(taskIDregexp)?.map(el=>+el)
+  }
+  
+  return {taskID, message, nPageNow, nPageAll}
 }

@@ -3,6 +3,7 @@ import { groupModel } from "../../models/groups";
 import { taskModel } from "../../models/tasks";
 import { userModel } from "../../models/users";
 import { ALLOWED_ROLES, ARG_LEN_ERR_MESSAGE, SYNTAX_ERR_MESSAGE } from "../../utils/constants";
+import { SEND_TASK } from "../../utils/markups";
 import { comDesc } from '../comDesc'
 import { command } from "../command";
 
@@ -46,11 +47,11 @@ async function sendTask(ctx): Promise<void> {
     })
 
     ctx.telegram.sendMessage(member.uid, 
-      `Новая задача от ${group.groupName}!\ntask_id: ${task._id}\n\nПредмет: ${discipline}\n\nОписание: ${description}\n\nЧтобы принять, введите /accept ${task._id}\nЧтобы отклонить, введите /decline ${task._id}`)
+      `Новая задача от ${group.groupName}!\nИдентификатор задачи: ${task._id}\n\nПредмет: ${discipline}\n\nОписание: ${description}\n\nЧтобы принять, введите /accept ${task._id}\nЧтобы отклонить, введите /decline ${task._id}`, SEND_TASK)
     
-    if (i++ >= 30) {
+    if (i++ >= 24) {
       await new Promise((resolve) => setTimeout(resolve, 1200))
-      i = 0
+      i = 1
     }
   }
   ctx.telegram.sendMessage(ctx.message.chat.id, `Задача успешно разослана всем в группе ${groupQuery}!`)

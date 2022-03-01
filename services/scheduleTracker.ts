@@ -22,7 +22,7 @@ export default async function scheduleTracker(bot: Telegraf<Context<Update>>): P
   const groupNames = Object.getOwnPropertyNames(scheduleToday)
   let i = 1
   for (let groupName of groupNames) {
-    const users = await userModel.find({groupName, role: ALLOWED_ROLES})
+    const users = await userModel.find({groupName, role: ALLOWED_ROLES, subscribe: true})
     if (!users.length) continue
     const message: string = prefix + scheduleToMessage(scheduleToday[groupName]) + suffix
     for (let user of users) {
@@ -36,11 +36,28 @@ export default async function scheduleTracker(bot: Telegraf<Context<Update>>): P
 }
 
 export function scheduleToMessage(schedule: object):string {
-  const PRIORITY_LIST = ['8:30-10:10', '8:30-12:00', '10:20-12:00', '10:20-14:00', '12:20-14:00', '12:20-15:50', '14:10-15:50', '14:10-17:40', '16:00-17:40', '16:00-19:30', '18:00-19:30', '18:00-21:10', '19:40-21:10', '19:40-22:50', '21:20-22:50']
+  const PRIORITY_LIST = [
+    '8:30-10:10', 
+    '8:30-12:00', '8:30-12:00A', '8:30-12:00B', 
+    '10:20-12:00', 
+    '10:20-14:00','10:20-14:00A','10:20-14:00B', 
+    '12:20-14:00', 
+    '12:20-15:50','12:20-15:50A','12:20-15:50B', 
+    '14:10-15:50', 
+    '14:10-17:40', '14:10-17:40A', '14:10-17:40B', 
+    '16:00-17:40', 
+    '16:00-19:30', '16:00-19:30A', '16:00-19:30B', 
+    '18:00-19:30', 
+    '18:00-21:10', '18:00-21:10A', '18:00-21:10B',
+    '19:40-21:10', 
+    '19:40-22:50', '19:40-22:50A', '19:40-22:50B',
+    '21:20-22:50']
   let result: string = ""
   for (let time of PRIORITY_LIST) {
     if (!schedule[time]) continue
-    result += time + " — " + schedule[time] + "\n"
+    let temptime = time
+    if (time[time.length - 1] != '0') temptime = time.slice(0, time.length - 1)
+    result += temptime + " — " + schedule[time] + "\n"
   }
   return result
 }

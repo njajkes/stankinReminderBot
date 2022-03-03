@@ -1,32 +1,12 @@
-import { taskModel } from "../../models/tasks";
-import { timeToString } from "../../utils/timeToString";
+import { SHOW_TASKS } from "../../utils/markups";
+import showTasksMessage from "../../utils/messageForming/showTasksMessageForming";
 import { comDesc } from '../comDesc'
 import { command } from "../command";
 
 async function showTasks(ctx) {
-  const w8ing4acceptTasks = await taskModel.find({uid: ctx.from.id, status: "w8ing4accept"}).sort({time: 1})
-  const pendingTasks = await taskModel.find( { uid: ctx.from.id, status: ["pending", "waiting"] } ).sort({time: 1})
-  if (!w8ing4acceptTasks.length && !pendingTasks.length) {
-    ctx.telegram.sendMessage(ctx.message.chat.id, "Задач, ожидающих выполнения или принятия, не найдено 🤕")
-    return
-  }
-
-  let result: string = ""
-  if (w8ing4acceptTasks.length) {
-    result += "Список задач, ожидающих вашего принятия: "
-    w8ing4acceptTasks.forEach(task => {
-      result += "\n\nИдентификатор задачи: " + task._id.toString() +'.\nПредмет: ' + task.discipline + '\nОписание: ' + task.description + "\nК какому времени: " + timeToString(task.time)
-    })
-    result += "\n\n"
-  }
-  if (pendingTasks.length) {
-    result += "Список ваших задач: "
-    pendingTasks.forEach(task => {
-      result += "\n\nИдентификатор задачи: " + task._id.toString() +'.\nПредмет: ' + task.discipline + '\nОписание: ' + task.description + "\nК какому времени: " + timeToString(task.time)
-    })
-  }
+  let result = `${(await showTasksMessage(ctx.from.id, "w84a"))}\n\n${(await showTasksMessage(ctx.from.id, "waiting"))}`
   
-  ctx.telegram.sendMessage(ctx.message.chat.id, result)
+  ctx.telegram.sendMessage(ctx.message.chat.id, result, SHOW_TASKS)
 }
 
 const showTasksDescription = new comDesc("/show_tasks", "посмотреть свои задачи", 0, "Возвращает как задачи, которые вы приняли, так и те, которые ожидают одобрения/отклонения")

@@ -2,7 +2,7 @@ import { Context, Telegraf } from "telegraf"
 import { Update } from "telegraf/typings/core/types/typegram"
 import logger from "../logs/logger"
 
-export default async function debug(bot:Telegraf<Context<Update>>) {
+export default function debug(bot:Telegraf<Context<Update>>) {
   bot.use(async (ctx, next) => {
     await logger(ctx)
     next()

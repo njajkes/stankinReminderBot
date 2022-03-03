@@ -11,15 +11,9 @@ function reschedule(m: number) {
     await task.save()
     let msg: string;
     switch(m) {
-      case 5:
-      case 10:
-      case 15:
-      case 30:
-      case 45:
-        msg = `${m} минут`
-        break
       case 60:
         msg = `1 час`
+        break
       case 3*60:
       case 24*60:
         msg = `${m%60} часа`
@@ -29,7 +23,7 @@ function reschedule(m: number) {
         msg = `${m%60} часов`
         break
       default:
-        msg = "undefined"
+        msg = `${m} минут`
     } 
 
     ctx.editMessageText(message.text + `\n\nЗадача была отложена на ${msg} :)`)  

@@ -1,4 +1,4 @@
-import formingScheludeMessage from "../utils/formingScheduleMessage"
+import formingScheludeMessage from "../utils/messageForming/formingScheduleMessage"
 import { SCHEDULE_EDIT_DEFAULT } from "../utils/markups"
 import { parseCallbackQuery } from "../utils/parseCallbackQuery"
 import { Action } from "./action"
@@ -21,6 +21,9 @@ function scheduleChange(n?: number) {
       case 3:
         newMarkup.reply_markup.inline_keyboard[0][1].text = '• 3 дня •'
         break;
+      case 1:
+        newMarkup.reply_markup.inline_keyboard[0][0].text = '• 1 день •'
+        break;
       default:
         newMarkup.reply_markup.inline_keyboard[0][0].text = '• 1 день •'
     }
@@ -33,7 +36,7 @@ function scheduleChange(n?: number) {
   }
 }
 
-const schedule1d = scheduleChange()
+const schedule1d = scheduleChange(1)
 const Schedule1d = new Action(schedule1d, "SCHEDULE_CHANGE_1D")
 
 const schedule3d = scheduleChange(3)

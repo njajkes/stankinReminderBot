@@ -10,6 +10,6 @@ export default async function logger(ctx) {
   const updateType = ctx.update.callback_query ? `callback_query` : `message`
   const data = ctx.update.callback_query ? ctx.update.callback_query.data : `"${ctx.message.text}"`
 
-  const log = "\n" + dateMsg + " " + sender + " " + updateType + ": " + data
+  const log = `\n${dateMsg} ${sender} ${updateType}: ${data}`
   await fs.appendFile(__dirname + sep + "logs.log", log)  
 }

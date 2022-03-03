@@ -44,3 +44,20 @@ export const MED_GROUPS_LIST = Markup.inlineKeyboard([
 export const LAST_GROUPS_LIST = Markup.inlineKeyboard([
   Markup.button.callback("<--", "GROUPS_LIST_PREV")
 ])
+
+export const HELP_MENU = Markup.inlineKeyboard([
+  [
+    Markup.button.callback("Для всех", "HELP_ALL")
+  ],
+  [
+    Markup.button.callback("Для модераторов", "HELP_MOD"),
+    Markup.button.callback("Для админов", "HELP_ADM")
+  ]
+])
+
+export const SHOW_TASKS = Markup.inlineKeyboard([
+  [
+    Markup.button.callback("Ждут принятия", "SHOW_TASKS_W84A"),
+    Markup.button.callback("Ждут выполнения", "SHOW_TASKS_W8ING")
+  ]
+])

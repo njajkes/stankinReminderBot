@@ -9,6 +9,7 @@ import scheduleTracker from './services/scheduleTracker'
 import debug from './utils/debug'
 
 const { TOKEN, MONGO } = dotenv.config().parsed
+
 async function databaseStart() {
   try {
     await mongoose.connect(MONGO)
@@ -26,7 +27,7 @@ bot.on("message", (ctx) => {
   ctx.telegram.sendMessage(ctx.message.chat.id, "Пожалуйста, введите какую-нибудь команду! Я не понимаю по-другому 😖\nСписок всех команд: /help")
 })
 
-let min = 0
+let min = 59
 
 setInterval(async () => {
   min++
@@ -49,3 +50,6 @@ setInterval(async () => {
 }, 60000) // every 1min
 
 bot.launch()
+
+process.once('SIGINT', () => bot.stop('SIGINT'))
+process.once('SIGTERM', () => bot.stop('SIGTERM'))

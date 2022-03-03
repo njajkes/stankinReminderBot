@@ -1,5 +1,5 @@
-import { Start } from './start'
-import { Help } from './help'
+import { Start } from './all/start'
+import { Help } from './all/help'
 import { GroupList } from './all/groupsList'
 import { AddTask } from './task_management/addTask'
 import { AddGroup } from './all/addGroup'
@@ -14,7 +14,7 @@ import { Decline } from './task_management/decline'
 import { ShowTasks } from './task_management/showTasks'
 import { SetInfo } from './group_management/description/setInfo'
 import { DeleteInfo } from './group_management/description/delInfo'
-import { About } from './about'
+import { About } from './all/about'
 import { DeleteDaily } from './group_management/daily/delDaily'
 import { SetDaily } from './group_management/daily/setDaily'
 import { Ban } from './group_management/ban'
@@ -24,7 +24,8 @@ import { DeclineJoin } from './members/declineJoin'
 import { SendAll } from './group_management/sendAll'
 import { Sub } from './members/sub'
 import { Unsub } from './members/unsub'
-import { Schedule } from './schedule'
+import { Schedule } from './all/schedule'
+import { DevSendLogs } from './devtools/devSendLogs'
 
 export const commands = [
   Start,
@@ -53,5 +54,6 @@ export const commands = [
   Unban,
   Sub,
   Unsub,
-  Schedule
+  Schedule,
+  DevSendLogs
 ]

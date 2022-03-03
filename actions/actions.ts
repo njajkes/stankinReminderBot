@@ -6,6 +6,8 @@ import { FailedTaskAction } from "./failed";
 import { Reschedules } from "./reschedule";
 import { ScheduleChange } from "./scheduleChange";
 import { GroupListActions } from "./groupListMenu";
+import { HelpActions } from "./helpAction";
+import { ShowTasksActions } from "./showTasksActions";
 
 export const actions: Action[] = [
   DoneTaskAction,
@@ -14,5 +16,7 @@ export const actions: Action[] = [
   ...EditsTaskTime,
   ...Reschedules,
   ...ScheduleChange,
-  ...GroupListActions
+  ...GroupListActions,
+  ...HelpActions,
+  ...ShowTasksActions
 ]

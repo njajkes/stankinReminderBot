@@ -1,5 +1,5 @@
-import { scheduleToMessage } from "../services/scheduleTracker"
-import dateStringify from "./dateStringify"
+import { scheduleToMessage } from "../../services/scheduleTracker"
+import dateStringify from "../dateStringify"
 import * as fs from "fs/promises"
 import * as path from "path"
 

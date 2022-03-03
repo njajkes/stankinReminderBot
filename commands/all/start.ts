@@ -1,6 +1,6 @@
-import { findUserByUID, createNewUser } from "../controllers/users"
-import { comDesc } from './comDesc'
-import { command } from "./command"
+import { findUserByUID, createNewUser } from "../../controllers/users"
+import { comDesc } from '../comDesc'
+import { command } from "../command"
 
 async function start(ctx): Promise<void> {
   const user = await findUserByUID(ctx.from.id)

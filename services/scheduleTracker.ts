@@ -11,7 +11,7 @@ export default async function scheduleTracker(bot: Telegraf<Context<Update>>): P
   let prefix: string = "Доброе утро! Расписание на сегодня:\n\n", // 0 - morning, 1 - evening
       suffix: string = "\nХорошего учебного дня!"
   const timeNow: Date = new Date(Date.now())
-  if (timeNow.getHours() >= 18) {
+  if (timeNow.getUTCHours() >= 15) {
     timeNow.setDate(timeNow.getDate() + 1)
     prefix = "Добрый вечер! Расписание на завтра:\n\n"
     suffix = "\n\nХорошего отдыха перед тяжелым учебным днём! 😌"

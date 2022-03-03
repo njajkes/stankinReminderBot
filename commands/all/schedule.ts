@@ -1,8 +1,8 @@
-import { getStankinGroups } from "../utils/getStankinGroups"
-import { command } from "./command"
-import { comDesc } from "./comDesc"
-import formingScheludeMessage from "../utils/formingScheduleMessage"
-import { SCHEDULE_EDIT_DEFAULT } from "../utils/markups"
+import { getStankinGroups } from "../../utils/getStankinGroups"
+import { command } from "../command"
+import { comDesc } from "../comDesc"
+import formingScheludeMessage from "../../utils/messageForming/formingScheduleMessage"
+import { SCHEDULE_EDIT_DEFAULT } from "../../utils/markups"
 
 async function schedule(ctx) {
   const query = ctx.message.text.split(' ')[1]

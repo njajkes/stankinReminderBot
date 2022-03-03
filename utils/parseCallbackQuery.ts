@@ -1,4 +1,4 @@
-export function parseCallbackQuery(ctx, options?: {gl?: boolean, task?: boolean}) {
+export function parseCallbackQuery(ctx, options?: {list?: boolean, task?: boolean}) {
   const taskIDregexp = /Идентификатор задачи: (\d{0,})/m
   
   const {message} = ctx.update.callback_query;
@@ -8,7 +8,7 @@ export function parseCallbackQuery(ctx, options?: {gl?: boolean, task?: boolean}
   let nPageAll: number
   let taskID: number
 
-  if (options?.gl) {
+  if (options?.list) {
     [, nPageNow, nPageAll] = message.text.match(npageRegexp)?.map(el=>+el)
   }
   if (options?.task) {
